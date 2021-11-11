@@ -1,0 +1,2 @@
+# ProjektPraktikum_TUD_AUT_QuadTorque
+Projekt Praktikum Automatisierungstechnik Quadrocopter Drehmoent Erfassung
