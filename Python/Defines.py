@@ -20,51 +20,65 @@ FILENAME_TMP_DATA_TAG = "tmp_{}.mat"
 
 FILENAME_CMPLaps = "CompareLab.mat"
 
+#Signal Names
+SIGNAL_GPIO_AI0_PERCENT = "GPIO.AI0.percent"
+SIGNAL_GPIO_AI0_RAW = "GPIO.AI0.raw"
+SIGNAL_GPIO_AI0_VOLT = "GPIO.AI0.volt"
+SIGNAL_HX711_DT_READ = "HX711.dt.read"
+SIGNAL_HX711_DT_UPDATE = "HX711.dt.update"
+SIGNAL_HX711_RAW = "HX711.raw"
+SIGNAL_INA219_CURR = "INA219.curr"
+SIGNAL_INA219_PWR = "INA219.pwr"
+SIGNAL_INA219_VOLT = "INA219.volt"
+SIGNAL_CFG_APP = "cfg.app"
+SIGNAL_ESC_ANGLE = "esc.angle"
+SIGNAL_ESC_APP = "esc.app"
+SIGNAL_GPIO_FRQ_IN0_DUR = "gpio.frq_in0.dur"
+SIGNAL_GPIO_FRQ_IN0_FRQ = "gpio.frq_in0.frq"
+SIGNAL_GPIO_FRQ_IN0_RPM = "gpio.frq_in0.rpm"
+
+
+# Group Names
+GROUP_HX711 = "HX711"
+GROUP_INA219 = "INA219"
+GROUP_FRQ_IN0 = "Frq_in0"
+GROUP_AI0 = "AI0"
+
+# Trace Names
+TRACE_RAW = "raw" #[1]
+TRACE_WEIGHT_GRAM = "weight_g" #[g]
+TRACE_FORCE = "force" #[N]
+TRACE_TORQUE = "torque" #[NM]
+TRACE_DC_CURRENT = "dc_current" #[A]
+TRACE_DC_VOLT = "dc_volt" #[V]
+TRACE_DC_POWER = "dc_power" #[W]
+
+TRACE_THROTTLE = "throttle"
+TRACE_PHASE_CURRENT = "phase_current"
+TRACE_MOTOR_SPEED = "motor_speed_rpm" #[rpm]
+TRACE_MOTOR_POWER = "motor_power"
+
+TRACE_IS_STEADY_STATE = "is_steady_state"
+
+
+
+
 
 #Group Names
-GROUP_BASIC_NAV = "Basic_Navigation"
-GROUP_INS = "INS"
-GROUP_VDY = "VDY" #Vehicle Dynamics
-GROUP_VDY_REF = "VDY_Ref" #Vehicle Dynamics
-GROUP_VDY_REF_MTIG = "VDY_Ref_MTiG" #Vehicle Dynamics
-GROUP_VDY_REF_ADMA = "VDY_Ref_ADMA" #Vehicle Dynamics
-GROUP_VDY_REF_EXTERN = "VDY_Ref_Extern" #Vehicle Dynamics
-GROUP_VDY_REF_GNSS = "VDY_Ref_GNSS" #VDY Ref from GNSS Calculated (SteadyState Cornering)
-GROUP_VDY_REF_IMU = "VDY_Ref_IMU" #VDY Ref only from IMU Calculated (GyroYZ Split)
-GROUP_VDY_REF_IMU_VELX = "VDY_Ref_IMU_Velx" #VDY Ref from IMU + VelX (GyroYZ Split, GyroYZ-Vel Aprox)
-GROUP_VDY_REF_IMU_VELX_HEAD = "VDY_Ref_IMU_Velx_Head" #VDY Ref from IMU + VelX + GPS Heading (GyroYZ Split, GyroYZ-Vel Aprox)
-GROUP_VDY_REF_IMU_VELX_HEAD_POSI = "VDY_Ref_IMU_Velx_Head_Posi" #VDY Ref from IMU + VelX + GPS Heading + GPS Posi (GyroYZ Split, GyroYZ-Vel Aprox)
-GROUP_VDY_REF_IMU_GNSS = "VDY_Ref_IMU_GNSS" #VDY Ref from IMU and GNSS (Complete Set of References)
-GROUP_GPS_DYNAMICS = "GPS_Dynamics"
-GROUP_DRIVE = "Drive"
 GROUP_ACCEL = "Accelerometer"
 GROUP_ACCEL_RAW = "Accelerometer_RAW"
 GROUP_GYRO = "Gyroskop"
 GROUP_GYRO_RAW = "Gyroskop_RAW"
 GROUP_MAG = "Magnetometer"
 GROUP_MAG_RAW = "Magnetometer_RAW"
-GROUP_GPS_TIME = "GPS_Time"
-GROUP_GPS_DATE = "GPS_Date"
-GROUP_GPS_SPEED = "GPS_Speed"
-GROUP_GPS_POSI = "GPS_Position"
-GROUP_GPS_ALTITUDE = 'GPS_Altitude'
-GROUP_GPS_INFO1 = "GPS_Info1"
-GROUP_GPS_INFO2 = "GPS_Info2"
-GROUP_GPS_INFO3 = "GPS_Info3"
-GROUP_GPS_FIX = "GPS_Fix"
 GROUP_DISTANCE = "Distance"
 GROUP_DIST = "RelDist"
-GROUP_LAPS = "Laps"
 GROUP_POSI = "Position"
 GROUP_VELOCITY = "Velocity"
 GROUP_ORIENTATION = "Orientation"
-GROUP_TRIGGER_SYNC = "Trigger_Sync"
-GROUP_TRIGGER = "Trigger"
 GROUP_STRING_LOG = "StringLog"
 GROUP_BYTES_LOG = "BytesLog"
 GROUP_MISC = "Misc"
-GROUP_NAV = "Nav"
-GROUP_SIMNAV = "SimNav"
 GROUP_DEBUG_S = "DEBUG_S" #float
 GROUP_DEBUG_T = "DEBUG_T" #float
 GROUP_DEBUG_U = "DEBUG_U" #float
@@ -74,15 +88,9 @@ GROUP_DEBUG_w = "DEBUG_W1" #5x int
 GROUP_DEBUG_X = "DEBUG_X" #int32
 GROUP_DEBUG_Y = "DEBUG_Y" #int32
 GROUP_DEBUG_Z = "DEBUG_Z" #int32
-GROUP_GPS_HEADING = "GPS_Heading"
-GROUP_HEADING = "Heading"
-GROUP_ALTITUDE_BARO = "Altitude_Baro"
-GROUP_ALTITUDE = "Altitude"
 GROUP_TEMPERATURE = "Temperature"
-GROUP_TEMPHUMID = "TempHumid"
 GROUP_BATTERY = "Battery"
 GROUP_BATTERY_DATA = "Battery_Data"
-GROUP_MLX_TEMP = "MLX_Temp"
 GROUP_TIME = "Time"
 GROUP_TIMESTAMP = "TimeStamp"
 GROUP_TEMP_TIRE = "Temp_Tire"
@@ -92,18 +100,6 @@ GROUP_DMC_MOTOR = "DMC_Motor"
 GROUP_MOTOR_SUPPLY = "Motor_Supply"
 GROUP_MOTOR_DYNAMICS = "Motor_Dynamics"
 GROUP_CAN_MSG = "CAN_MSGs"
-GROUP_BMS_STATUS_L = "BMS_L_Status"
-GROUP_BMS_STATUS_R = "BMS_R_Status"
-GROUP_BMS_STATUS2_L = "BMS_L_Status2"
-GROUP_BMS_STATUS2_R = "BMS_R_Status2"
-GROUP_BMS_CELL_L = "BMS_L_Cell"
-GROUP_BMS_CELL_R = "BMS_R_Cell"
-GROUP_BMS_TEMP = "BMS_Temp"
-
-GROUP_SONIC_DISTANCE = "Sonic_Distance"
-GROUP_LIDAR_DISTANCE = "LIDAR_Distance"
-
-GROUP_MANEUVER = "Maneuver"
 
 
 GROUP_TMP = "tmp"
@@ -295,10 +291,7 @@ TRACE_2 = "Trace2"
 TRACE_3 = "Trace3"
 TRACE_4 = "Trace4"
 TRACE_5 = "Trace5"
-TRACE_PHASE_CURRENT = "Phase_Current"
-TRACE_MOTOR_SPEED = "Motor_Speed_rpm" #[rpm]
-TRACE_VEHICLE_SPEED = "Vehicle_Speed"
-TRACE_MOTOR_POWER = "Motor_Power"
+
 TRACE_DMC_APP = "DMC_APP"
 TRACE_DMC_MAP = "DMC_MAP"
 TRACE_DMC_STAT = "DMC_STAT"
@@ -528,9 +521,6 @@ TRACE_TO_LIMITS = {
 
 
 def get_Unit(Tag):
-	from ManeuverDefines import LOOKUP_STAT_TO_UNIT
-	if Tag in LOOKUP_STAT_TO_UNIT:
-		return LOOKUP_STAT_TO_UNIT[Tag]
 	if(Tag in TRACE_TO_UNITS):
 		return TRACE_TO_UNITS[Tag]
 	if Tag in TAG_TO_UNIT:
@@ -552,3 +542,5 @@ def getFeature_Text(Tag, without_tag=False):
 		return "{}\n ({})".format(FEATURE_TO_TEXT[Tag], braket_text)
 	else:
 		return Tag
+
+
