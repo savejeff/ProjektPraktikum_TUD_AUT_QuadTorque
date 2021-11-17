@@ -1,7 +1,7 @@
 FILENAME_PATH_JSON = "paths.json"
 class paths:
 
-	DIR_LOGFILES = "../Logdaten"
+	DIR_LOGFILES = "../../Logdaten"
 	DIR_TMP = "./tmp"
 	PATH_DIADEM = r"C:\Program Files\National Instruments\DIAdem 2019\DIAdem.exe"
 	#PATH_DIADEM_DOCUMENTS = r"C:\Users\Public\Documents\National Instruments\DIAdem 2019\Documents"
@@ -15,6 +15,7 @@ class paths:
 
 		from FileHelp import path_join
 
+		self.PATH_TDV_OVERVIEW = path_join(self.PATH_DIADEM_DOCUMENTS, "View_Overview.TDV")
 		self.PATH_TDV_DEFAULT = path_join(self.PATH_DIADEM_DOCUMENTS, "View_Log_Default.TDV")
 		self.PATH_TDV_TMP = path_join(self.PATH_DIADEM_DOCUMENTS, "TMP.TDV")
 

@@ -1,11 +1,11 @@
 from Defines import *
-from FileHelp import *
+#from FileHelp import *
 #from StatisticHelp import *
-from HelpMath import *
+#from HelpMath import *
 #from UserHelp import *
 
 #import numpy
-#import numpy as np
+import numpy as np
 #import scipy.io as sio
 from pprint import pprint
 

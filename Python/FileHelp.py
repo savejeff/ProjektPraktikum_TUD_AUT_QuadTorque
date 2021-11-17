@@ -525,7 +525,7 @@ def zipFolder(folderpath, switch_ext=[]):
 ##############################
 
 
-def load_txt(filename, path="", encoding=ENCODING_UTF_8):
+def load_txt(filename : str, path="", encoding=ENCODING_UTF_8) -> str:
 	if ("." not in filename):
 		filename += '.txt'
 
@@ -537,8 +537,8 @@ def load_txt(filename, path="", encoding=ENCODING_UTF_8):
 	path = fix_path(filename)
 
 	if not file_exists(path):
-		print("load_file_lines: file {} does not exist".format(path))
-		return []
+		print("load_txt: file {} does not exist".format(path))
+		return ""
 
 	with open(path, encoding=encoding) as f:
 		content = f.read()
@@ -546,7 +546,7 @@ def load_txt(filename, path="", encoding=ENCODING_UTF_8):
 	return content
 
 
-def store_txt(text, filename, path="", encoding=ENCODING_UTF_8):
+def store_txt(text : str, filename : str, path="", encoding=ENCODING_UTF_8):
 
 	#if not filename.endswith('.txt'):
 	if "." not in filename:
@@ -582,7 +582,7 @@ def load_bin(filename : str, path="") -> bytes:
 	path = fix_path(filename)
 
 	if not file_exists(path):
-		print("load_file_lines: file {} does not exist".format(path))
+		print("load_bin: file {} does not exist".format(path))
 		return bytes()
 
 	with open(path, mode="rb") as f:
@@ -628,13 +628,13 @@ def json_dump(data, compact=False, ensure_ascii=False):
 		return json.dumps(data, indent=4, sort_keys=True, ensure_ascii=ensure_ascii)
 
 
-def update_json(newdata, filename, path=""):
+def update_json(newdata, filename : str, path=""):
 	data = load_json(filename, path)
 	data.update(newdata)
 	store_json(data, filename, path)
 
 
-def exits_json(filename, path=""):
+def exits_json(filename : str, path="") -> bool:
 	if not filename.endswith(".json"):
 		filename += '.json'
 
@@ -645,7 +645,7 @@ def exits_json(filename, path=""):
 	return file_exists(filename)
 
 
-def store_json(data, filename, path="", compact=False, ensure_ascii=False):
+def store_json(data : dict, filename : str, path="", compact=False, ensure_ascii=False):
 	import json
 
 	if not filename.endswith(".json"):
@@ -666,7 +666,7 @@ def store_json(data, filename, path="", compact=False, ensure_ascii=False):
 				json.dump(data, f, indent=4, sort_keys=True, ensure_ascii=ensure_ascii)
 
 
-def load_json(filename, path=""):
+def load_json(filename : str, path="") -> dict:
 	import json
 	if not filename.endswith(".json"):
 		filename += '.json'
@@ -699,7 +699,7 @@ def load_json(filename, path=""):
 # PICKLE
 #https://docs.python.org/3/library/pickle.html
 
-def store_pkl(data, filename, path=""):
+def store_pkl(data, filename : str, path=""):
 	"""Saves an object in pickle format."""
 	import pickle
 
@@ -713,7 +713,7 @@ def store_pkl(data, filename, path=""):
 
 	pickle.dump(data, open(filename, 'wb'))
 
-def load_pkl(filename, path=""):
+def load_pkl(filename : str, path=""):
 	"""Restores an object from a pickle file."""
 	import pickle
 
@@ -741,7 +741,7 @@ def load_pkl(filename, path=""):
 
 
 
-def store_numpy(data, filename, path=""):
+def store_numpy(data, filename : str, path=""):
 	"""Saves an object in npy format."""
 	import numpy
 
@@ -757,7 +757,7 @@ def store_numpy(data, filename, path=""):
 
 	numpy.save(filename, data)
 
-def load_numpy(filename, path=""):
+def load_numpy(filename : str, path=""):
 	"""Restores an object from a npy file."""
 	import numpy
 
@@ -784,7 +784,7 @@ def load_numpy(filename, path=""):
 ##############################
 
 
-def store_mat(data, filename):
+def store_mat(data : dict, filename : str):
 	import scipy.io as sio
 
 	if not filename.endswith(".mat"):
@@ -805,14 +805,17 @@ def store_mat(data, filename):
 	"""
 
 
-def load_mat(filename):
+def load_mat(filename : str) -> dict:
 	import scipy.io as sio
 	import numpy as np
 
+	if not filename.endswith(".mat"):
+		filename += '.mat'
 
-	if (not file_exists(filename)):
+	if not file_exists(filename):
 		print("load_mat: file not found {}".format(filename))
-		return None
+		return {}
+
 	print("file loading: {}".format(filename))
 
 	file = sio.loadmat(filename)
@@ -871,7 +874,7 @@ def load_mat(filename):
 ##############################
 
 
-def store_yaml(data, filename, path=""):
+def store_yaml(data, filename : str, path=""):
 	import yaml
 
 	if not filename.endswith(".yaml"):
