@@ -27,15 +27,20 @@ if __name__ == '__main__':
 		offset_factor = 1148.709 #[1/g]
 		leverarm = 0.025 #[m]
 
-		datestring = "2021-11-16"
-		logfilename = "COM_ser_2021-11-16_12-57-48"
+		#datestring, logfilename, name = "2021-11-16", "COM_ser_2021-11-16_12-57-48", "1000KV_4S_PropS_0"
+		#datestring, logfilename, name = "2021-11-22", "COM_ser_2021-11-22_12-04-01", "LabMotor_3S_PropB_0"  # Motor Labor, 3S Bat, Big Prop #0
+		#datestring, logfilename, name = "2021-11-22", "COM_ser_2021-11-22_12-27-57", "LabMotor_3S_PropB_1"  # Motor Labor, 3S Bat, Big Prop #1
+		#datestring, logfilename, name = "2021-11-22", "COM_ser_2021-11-22_12-38-52", "LabMotor_3S_PropB_2"  # Motor Labor, 3S Bat, Big Prop #2
+		#datestring, logfilename, name = "2021-11-22_S", "COM_ser_2021-11-22_12-50-35", "LabMotor_3S_PropS_1"  # Motor Labor, 3S Bat, Small Prop #1
+		datestring, logfilename, name = "2021-11-22_S", "COM_ser_2021-11-22_12-57-26", "LabMotor_3S_PropS_2" # Motor Labor, 3S Bat, Small Prop #2
+
 
 		path_out = getLogfilefolder(datestring)
 		Data = LoadData(datestring, logfilename)
 
 		for group in Data:
-			name = group.upper().replace(".", "_")
-			print(f"SIGNAL_{name} = \"{group}\"")
+			sig_name = group.upper().replace(".", "_")
+			print(f"SIGNAL_{sig_name} = \"{group}\"")
 
 
 		def CreateGroup_FromSignals(Data, GROUP, SIGNALS, dt=None, LOOKUP_SIGNAL_TO_TRACE : dict = None , delete_signal=False):
@@ -90,9 +95,9 @@ if __name__ == '__main__':
 
 			Trace_Smooth(Data, GROUP_TEST, TRACE_DC_CURRENT, t_range=0.25)
 			Trace_Smooth(Data, GROUP_TEST, TRACE_TORQUE, t_range=0.25)
-			Trace_Smooth(Data, GROUP_TEST, TRACE_MOTOR_SPEED, t_range=0.25)
+			Trace_Smooth(Data, GROUP_TEST, TRACE_MOTOR_SPEED, t_range=1, TRACE_RES=TRACE_TMP)
 
-			Trace_Derivative(Data, GROUP_TEST, TRACE_MOTOR_SPEED, TRACE_ACCEL)
+			Trace_Derivative(Data, GROUP_TEST, TRACE_TMP, TRACE_ACCEL)
 
 			Trace_ApplyFunc(Data, GROUP_TEST, TRACE_ACCEL, lambda a: int(-100 < a < 100), TRACE_IS_STEADY_STATE)
 
@@ -112,6 +117,7 @@ if __name__ == '__main__':
 
 			x, y = Data[GROUP_TEST2][TRACE_TORQUE], Data[GROUP_TEST2][TRACE_DC_CURRENT]
 			points = list(zip(x, y))
+			points = [(x, y) for x, y in points if not (y < 0.2 and x > 0.025)]
 			plot_point(points, markersize=2)
 
 			m, b = regression_linear(x, y)
@@ -122,7 +128,7 @@ if __name__ == '__main__':
 
 			plot_xy([p_min, p_max], color=COLOR_RED)
 
-			plot_tofile(path_join(path_out, "plot_current_over_torque.png"))
+			plot_tofile(path_join(path_out, "plot_current_over_torque_{}.png".format(name)))
 			plot_show(False)
 
 
@@ -147,7 +153,7 @@ if __name__ == '__main__':
 			points = list(zip(x_seq, y_seq))
 			plot_xy(points, color=COLOR_RED)
 
-			plot_tofile(path_join(path_out, "plot_current_over_speed.png"))
+			plot_tofile(path_join(path_out, "plot_current_over_speed_{}.png".format(name)))
 			plot_show(False)
 
 
@@ -159,7 +165,7 @@ if __name__ == '__main__':
 			points = list(zip(x, y))
 			plot_point(points, markersize=2)
 
-			plot_tofile(path_join(path_out, "plot_speed_over_throttle.png"))
+			plot_tofile(path_join(path_out, "plot_speed_over_throttle_{}.png".format(name)))
 			plot_show(False)
 
 
