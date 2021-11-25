@@ -61,8 +61,11 @@ TRACE_MOTOR_POWER = "motor_power"
 TRACE_IS_STEADY_STATE = "is_steady_state"
 
 
+GROUP_OSCI = "Osci"
+GROUP_PHASE_CURRENT_ANALYSIS = "phase_curr_analysis"
 
-
+TRACE_VOLTAGE1 = "Voltage1"
+TRACE_VOLTAGE2 = "Voltage2"
 
 #Group Names
 GROUP_ACCEL = "Accelerometer"

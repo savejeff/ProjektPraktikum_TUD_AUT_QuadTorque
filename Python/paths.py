@@ -42,4 +42,5 @@ def Script_Configure_pathjson():
 
 if __name__ == '__main__':
 	from FileHelp import store_json
-	store_json(PATH.__dict__, FILENAME_PATH_JSON)
+	#store_json(PATH.__dict__, FILENAME_PATH_JSON)
+	Script_Configure_pathjson()

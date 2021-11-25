@@ -3,26 +3,43 @@ from ImportsBase import *
 
 if __name__ == '__main__':
 	# Load Osci Logging
-	if False:
-		datestring = "2021-11-11"
-		#logfilename = "bldc_throttle_10.csv"
+	if True:
+		datestring = "2021-11-22_2"
+		logfilename = "bldc_phase_current_phase_to_ground_voltage_throttle_100"
 
 		logfilefolder = getLogfilefolder(datestring)
 
-		for logfilename in getAllOsciLogfiles(datestring):
+		#logfilenames = getAllOsciLogfiles(datestring)
 
-			data = load_csv_wHeader(logfilename, logfilefolder, mode = 1, sample_func=lambda x : float(x))
+		logfilenames = [ logfilename ]
+
+		for logfilename in logfilenames:
+
+			data = load_csv_wHeader(logfilename, logfilefolder, mode = 1, sample_func=lambda x: float(x))
 
 			#print(data)
 
+			Data = {GROUP_OSCI: data}
+
+			if True: # Test Example
+
+				Trace_Rename(Data, GROUP_OSCI, "Time (s)", TRACE_TIME)
+				Trace_Rename(Data, GROUP_OSCI, "Channel 1 (V)", TRACE_PHASE_CURRENT)
+				Trace_Rename(Data, GROUP_OSCI, "Channel 2 (V)", TRACE_VOLTAGE)
+
+				Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT + "_smooth", t_range=0.0001)
+
+				OpenDiadem_Data(Data, PATH.PATH_TDV_TMP)
+				pass
+
+
 			logfilename_out = file_name_swap_extension(logfilename, ".mat")
-
-			store_mat({"Osci" : data}, path_join(logfilefolder, logfilename_out))
-
+			store_mat(Data, path_join(logfilefolder, logfilename_out))
 
 
 
-	if True:
+
+	if False:
 		offset = -244498 #[1]
 		offset_factor = 1148.709 #[1/g]
 		leverarm = 0.025 #[m]
@@ -78,9 +95,14 @@ if __name__ == '__main__':
 					Group_Delete(Data, SIGNAL)
 
 
+
+
 		if True: # Create HX711 Group and process raw value
 			Group_Copy(Data, SIGNAL_HX711_RAW, GROUP_HX711)
 			Trace_Rename(Data, GROUP_HX711, SIGNAL_HX711_RAW, TRACE_RAW)
+
+			OpenDiadem_Data(Data)
+
 			Trace_ApplyFunc(Data, GROUP_HX711, TRACE_RAW, func= lambda x: (x - offset) / offset_factor, TRACE_RES=TRACE_WEIGHT_GRAM)
 
 			Trace_Scale(Data, GROUP_HX711, TRACE_WEIGHT_GRAM, ScaleFactor=9.81 / 1000.0, TRACE_RES=TRACE_FORCE)
