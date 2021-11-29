@@ -2,16 +2,16 @@ from ImportsBase import *
 
 
 if __name__ == '__main__':
-	# Load Osci Logging
-	if True:
-		datestring = "2021-11-22_2"
-		logfilename = "bldc_phase_current_phase_to_ground_voltage_throttle_100"
+
+	if False: # Convert Osci Logging
+		datestring = "2021-11-22_S"
 
 		logfilefolder = getLogfilefolder(datestring)
 
-		#logfilenames = getAllOsciLogfiles(datestring)
+		logfilenames = getAllOsciLogfiles(datestring)
 
-		logfilenames = [ logfilename ]
+		logfilename = "bldc_phase_current_phase_to_ground_voltage_throttle_100"
+		#logfilenames = [ logfilename ]
 
 		for logfilename in logfilenames:
 
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
 			Data = {GROUP_OSCI: data}
 
-			if True: # Test Example
+			if False: # Test Example
 
 				Trace_Rename(Data, GROUP_OSCI, "Time (s)", TRACE_TIME)
 				Trace_Rename(Data, GROUP_OSCI, "Channel 1 (V)", TRACE_PHASE_CURRENT)
@@ -39,27 +39,29 @@ if __name__ == '__main__':
 
 
 
-	if False:
+	if True: # Convert Arduino Loggings
 		offset = -244498 #[1]
 		offset_factor = 1148.709 #[1/g]
 		leverarm = 0.025 #[m]
 
+		# Select a Logfile to work with
 		#datestring, logfilename, name = "2021-11-16", "COM_ser_2021-11-16_12-57-48", "1000KV_4S_PropS_0"
 		#datestring, logfilename, name = "2021-11-22", "COM_ser_2021-11-22_12-04-01", "LabMotor_3S_PropB_0"  # Motor Labor, 3S Bat, Big Prop #0
 		#datestring, logfilename, name = "2021-11-22", "COM_ser_2021-11-22_12-27-57", "LabMotor_3S_PropB_1"  # Motor Labor, 3S Bat, Big Prop #1
 		#datestring, logfilename, name = "2021-11-22", "COM_ser_2021-11-22_12-38-52", "LabMotor_3S_PropB_2"  # Motor Labor, 3S Bat, Big Prop #2
 		#datestring, logfilename, name = "2021-11-22_S", "COM_ser_2021-11-22_12-50-35", "LabMotor_3S_PropS_1"  # Motor Labor, 3S Bat, Small Prop #1
 		#datestring, logfilename, name = "2021-11-22_S", "COM_ser_2021-11-22_12-57-26", "LabMotor_3S_PropS_2" # Motor Labor, 3S Bat, Small Prop #2
-		#datestring, logfilename, name = "2021-11-22_2", "COM_ser_2021-11-22_14-19-40", "LabMotor_3S_PropS_1" # Motor #2, 3S Bat, Small Prop #1
-		datestring, logfilename, name = "2021-11-22_2", "COM_ser_2021-11-22_14-28-17", "LabMotor_3S_PropS_2" # Motor #2, 3S Bat, Small Prop #2
+		datestring, logfilename, name = "2021-11-22_2", "COM_ser_2021-11-22_14-19-40", "LabMotor_3S_PropS_1" # Motor #2, 3S Bat, Small Prop #1
+		#datestring, logfilename, name = "2021-11-22_2", "COM_ser_2021-11-22_14-28-17", "LabMotor_3S_PropS_2" # Motor #2, 3S Bat, Small Prop #2
 
 
+		# Load Data from File
 		path_out = getLogfilefolder(datestring)
 		Data = LoadData(datestring, logfilename)
 
-		for group in Data:
-			sig_name = group.upper().replace(".", "_")
-			print(f"SIGNAL_{sig_name} = \"{group}\"")
+		#for group in Data: # Generate Signal Defines for Defines.py
+		#	sig_name = group.upper().replace(".", "_")
+		#	print(f"SIGNAL_{sig_name} = \"{group}\"")
 
 
 		def CreateGroup_FromSignals(Data, GROUP, SIGNALS, dt=None, LOOKUP_SIGNAL_TO_TRACE : dict = None , delete_signal=False):
@@ -101,7 +103,7 @@ if __name__ == '__main__':
 			Group_Copy(Data, SIGNAL_HX711_RAW, GROUP_HX711)
 			Trace_Rename(Data, GROUP_HX711, SIGNAL_HX711_RAW, TRACE_RAW)
 
-			OpenDiadem_Data(Data)
+			#OpenDiadem_Data(Data)
 
 			Trace_ApplyFunc(Data, GROUP_HX711, TRACE_RAW, func= lambda x: (x - offset) / offset_factor, TRACE_RES=TRACE_WEIGHT_GRAM)
 
@@ -193,9 +195,15 @@ if __name__ == '__main__':
 			plot_show(False)
 
 
+		if True: # EXAMPLE: Store processed data into _mod.mat
 
+			logfilename_out = logfilename + "_mod"
 
+			StoreData(Data, datestring, logfilename_out)
+
+		# Show result in Diadem
 		OpenDiadem_Data(Data, PATH.PATH_TDV_OVERVIEW, block=False)
 
 
 		plot_show()
+		#plot_close()
