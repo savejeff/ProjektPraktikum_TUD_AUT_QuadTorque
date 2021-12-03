@@ -53,6 +53,9 @@ TRACE_DC_CURRENT = "dc_current" #[A]
 TRACE_DC_VOLT = "dc_volt" #[V]
 TRACE_DC_POWER = "dc_power" #[W]
 
+TRACE_CHANNEL1_V = "Channel1_v" #[V]
+TRACE_CHANNEL2_V = "Channel2_v" #[V]
+
 TRACE_THROTTLE = "throttle"
 TRACE_PHASE_CURRENT = "phase_current"
 TRACE_MOTOR_SPEED = "motor_speed_rpm" #[rpm]
@@ -63,9 +66,6 @@ TRACE_IS_STEADY_STATE = "is_steady_state"
 
 GROUP_OSCI = "Osci"
 GROUP_PHASE_CURRENT_ANALYSIS = "phase_curr_analysis"
-
-TRACE_VOLTAGE1 = "Voltage1"
-TRACE_VOLTAGE2 = "Voltage2"
 
 #Group Names
 GROUP_ACCEL = "Accelerometer"

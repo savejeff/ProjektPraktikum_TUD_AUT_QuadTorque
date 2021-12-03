@@ -3,43 +3,78 @@ from ImportsBase import *
 
 if __name__ == '__main__':
 
-	if False: # Convert Osci Logging
+	if False: # Convert Osci Logging from .csv to .mat
+		#datestring = "2021-11-09"
+		#datestring = "2021-11-11"
+		#datestring = "2021-11-16"
+		#datestring = "2021-11-18"
+		#datestring = "2021-11-22"
+		#datestring = "2021-11-22_2"
 		datestring = "2021-11-22_S"
 
 		logfilefolder = getLogfilefolder(datestring)
 
+		# Use this to convert complete folder
 		logfilenames = getAllOsciLogfiles(datestring)
 
-		logfilename = "bldc_phase_current_phase_to_ground_voltage_throttle_100"
-		#logfilenames = [ logfilename ]
+		# Use this to convert specific file
+		#logfilenames = ["bldc_phase_current_phase_to_ground_voltage_throttle_100"]
 
 		for logfilename in logfilenames:
 
 			data = load_csv_wHeader(logfilename, logfilefolder, mode = 1, sample_func=lambda x: float(x))
 
-			#print(data)
-
 			Data = {GROUP_OSCI: data}
 
-			if False: # Test Example
+			# Rename Channel Names to defined names
+			Trace_Rename(Data, GROUP_OSCI, "Time (s)", TRACE_TIME)
+			Trace_Rename(Data, GROUP_OSCI, "Channel 1 (V)", TRACE_CHANNEL1_V)
+			if Trace_Exists(Data, GROUP_OSCI, "Channel 2 (V)"):
+				Trace_Rename(Data, GROUP_OSCI, "Channel 2 (V)", TRACE_CHANNEL2_V)
 
-				Trace_Rename(Data, GROUP_OSCI, "Time (s)", TRACE_TIME)
-				Trace_Rename(Data, GROUP_OSCI, "Channel 1 (V)", TRACE_PHASE_CURRENT)
-				Trace_Rename(Data, GROUP_OSCI, "Channel 2 (V)", TRACE_VOLTAGE)
+			#OpenDiadem_Data(Data)
 
-				Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT + "_smooth", t_range=0.0001)
-
-				OpenDiadem_Data(Data, PATH.PATH_TDV_TMP)
-				pass
-
-
+			# Store unmodified data
 			logfilename_out = file_name_swap_extension(logfilename, ".mat")
 			store_mat(Data, path_join(logfilefolder, logfilename_out))
 
 
+	if True: # Example Process Osci Logging .mat and store to _mod.mat
+
+		datestring, logfilename = "2021-11-22_S", "bldc_phase_current_phase_to_ground_voltage_throttle_100"
+
+		logfilefolder = getLogfilefolder(datestring)
+
+		Data = LoadData(datestring, logfilename)
+
+		t0 = -0.0002054
+		t1 = 0.0004064
+
+		if True: # Test Example
+
+			Trace_Rename(Data, GROUP_OSCI, TRACE_CHANNEL1_V, TRACE_PHASE_CURRENT)
+			Trace_Rename(Data, GROUP_OSCI, TRACE_CHANNEL2_V, TRACE_VOLTAGE)
+
+			i0 = time2index(Data[GROUP_OSCI], t0) # get index in array matching given time
+			v0 = time2value(Data[GROUP_OSCI], t0, TRACE_PHASE_CURRENT) # get value of trace at given time
+
+			# Create a Group by cropping another group
+			Group_Crop(Data, GROUP_OSCI, t_start=t0, t_end=t1, GROUP_RES=GROUP_OSCI + "_TEST")
+
+			Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT + "_smooth", t_range=0.0001)
+			Trace_Smooth(Data, GROUP_OSCI + "_TEST", TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT + "_smooth", t_range=0.0001)
+
+			#OpenDiadem_Data(Data, PATH.PATH_TDV_TMP)
+			pass
+
+		OpenDiadem_Data(Data, PATH.PATH_TDV_TMP)
+
+		logfilename_out = logfilename + "_mod"
+		store_mat(Data, path_join(logfilefolder, logfilename_out))
 
 
-	if True: # Convert Arduino Loggings
+
+	if False: # Convert Arduino Loggings
 		offset = -244498 #[1]
 		offset_factor = 1148.709 #[1/g]
 		leverarm = 0.025 #[m]
@@ -64,7 +99,7 @@ if __name__ == '__main__':
 		#	print(f"SIGNAL_{sig_name} = \"{group}\"")
 
 
-		def CreateGroup_FromSignals(Data, GROUP, SIGNALS, dt=None, LOOKUP_SIGNAL_TO_TRACE : dict = None , delete_signal=False):
+		def CreateGroup_FromSignals(Data, GROUP, SIGNALS, dt=None, LOOKUP_SIGNAL_TO_TRACE : dict = None, delete_signal=False):
 
 			if LOOKUP_SIGNAL_TO_TRACE == None:
 				LOOKUP_SIGNAL_TO_TRACE = {}
@@ -125,7 +160,9 @@ if __name__ == '__main__':
 
 			Trace_Derivative(Data, GROUP_TEST, TRACE_TMP, TRACE_ACCEL)
 
-			Trace_ApplyFunc(Data, GROUP_TEST, TRACE_ACCEL, lambda a: int(-100 < a < 100), TRACE_IS_STEADY_STATE)
+
+			#Trace_ApplyFunc(Data, GROUP_TEST, TRACE_ACCEL, lambda a: int(-400 < a < 400), TRACE_IS_STEADY_STATE)
+			Trace_ApplyFunc2Trace(Data, GROUP_TEST, TRACE_ACCEL, TRACE_MOTOR_SPEED, lambda a, v: int((-400 < a < 400) and v > 2000), TRACE_IS_STEADY_STATE)
 
 		if True: # Create Second Group that only contains values where steady state
 

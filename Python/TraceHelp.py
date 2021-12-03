@@ -23,11 +23,13 @@ def time2index(Group, t, TIME_TRACE=TRACE_TIME):
 	if t == -1:
 		return -1
 	"""
-	if t < 0:
-		t = t + Group[TIME_TRACE][-1]
+	#if t < 0:
+	#	t = t + Group[TIME_TRACE][-1]
+
+	assert TIME_TRACE in Group
 
 	TimeTrace = Group[TIME_TRACE]
-	if len(TimeTrace) < 1:
+	if len(TimeTrace) == 0:
 		return 0
 
 	ts = TimeTrace[0]
@@ -36,28 +38,28 @@ def time2index(Group, t, TIME_TRACE=TRACE_TIME):
 	length = Group_Length(Group)
 
 	index = 0
-	if (avg_dt != 0):
+	if avg_dt != 0:
 		index = int((t - ts) / avg_dt)
-	if (index >= length):
+	if index >= length:
 		index = length - 1
-	last_dt = 10000000
+	last_dt = None
 	last_index = index
 	while True:
-		if (index < 0):
+		if index < 0:
 			return 0
-		if (index >= length):
+		if index >= length:
 			return length - 1
 
 		dt = TimeTrace[index] - t
 		# if old detla was better/lower then current
-		if (abs(last_dt) <= abs(dt) and last_dt != dt):
+		if last_dt != None and abs(last_dt) <= abs(dt) and last_dt != dt:
 
-			if(abs(last_dt) > avg_dt * 2):
+			if abs(last_dt) > avg_dt * 2:
 				pass
 				#print("Time2Index Warning: dt avg: {} - but found closest has dt {}".format(avg_dt, last_dt))
 			"""
 			# makes no sense: might be error if last delta was much better/lower then current
-			if (abs(1.5 * last_dt) < abs(dt)):
+			if abs(1.5 * last_dt) < abs(dt):
 				if(last_index == index):
 					print("")
 				print("Time2Index error: t={} {} at index {}->{}s and {}->{}s".format(
@@ -75,9 +77,9 @@ def time2index(Group, t, TIME_TRACE=TRACE_TIME):
 			return last_index
 
 		last_index = index
-		if (dt == 0):
+		if dt == 0:
 			return index
-		if (dt > 0):
+		if dt > 0:
 			index -= 1
 		else:
 			index += 1
