@@ -1,0 +1,6 @@
+# - - - - ESC - - - - - 
+#use_analog_throttle=1
+#app=0.0
+#setspeed=0
+
+
