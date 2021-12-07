@@ -10,7 +10,7 @@
 
 #include <HX711.h>
 
-#define DEBUG_HX711
+//#define DEBUG_HX711
 
 class Sensor_HX711_Class : public jSensor {
 public:

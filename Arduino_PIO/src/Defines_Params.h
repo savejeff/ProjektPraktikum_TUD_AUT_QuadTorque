@@ -15,6 +15,7 @@
 	// Sensors
 	#define ENABLE_SENSOR_INA219 //Voltage Current Sensor 26V
 	#define ENABLE_SENSOR_HX711 //Load Cell Amplifier
+	#define ENABLE_SENSOR_HX711_2 //Load Cell Amplifier
 
 	// Actors
 	#define ENABLE_ACTOR_ESC //PWM ESC/Brushless Motor

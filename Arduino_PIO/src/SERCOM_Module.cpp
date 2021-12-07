@@ -70,7 +70,8 @@ void SERCOM_Module_Init()
 	
 #ifdef ENABLE_I2C0
 	I2C0.begin();
-	I2C0.setFrequency(I2C_SPEED_NORMAL);
+	//I2C0.setFrequency(I2C_SPEED_NORMAL);
+	I2C0.setFrequency(I2C_SPEED_FAST);
 #endif // ENABLE_I2C0
 
 #ifdef ENABLE_SPI0
@@ -106,6 +107,7 @@ void SERCOM_Module_Update()
 
 void SERCOM_Module_End()
 {
+	Log("ser.state: end");
 
 #ifdef ENABLE_SERIAL1
 	jSerial1.flush();

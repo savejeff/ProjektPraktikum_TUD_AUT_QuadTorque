@@ -20,6 +20,11 @@ Adafruit_INA219 Sensor_INA219;
 Sensor_HX711_Class Sensor_HX711(PIN_HX711_CLOCK, PIN_HX711_DATA);
 #endif // ENABLE_SENSOR_HX711
 
+#ifdef ENABLE_SENSOR_HX711_2
+#include <Sensors/Sensor_HX711.h>
+Sensor_HX711_Class Sensor_HX711_2(PIN_HX711_2_CLOCK, PIN_HX711_2_DATA);
+#endif // ENABLE_SENSOR_HX711_2
+
 #ifdef ENABLE_ACTOR_ESC
 #include "Sensors/Actor_ESC.h"
 Actor_ESC_Class Actor_ESC(PIN_PWM_OUT_ESC, PIN_ESC_PWR, true);
@@ -49,6 +54,10 @@ void SensorModule_Init()
 	Sensor_HX711.begin();
 #endif // ENABLE_SENSOR_HX711
 
+#ifdef ENABLE_SENSOR_HX711_2
+	Sensor_HX711_2.begin();
+#endif // ENABLE_SENSOR_HX711_2
+
 #ifdef ENABLE_ACTOR_ESC
 	Actor_ESC.begin();
 #endif // ENABLE_ACTOR_ESC
@@ -66,7 +75,7 @@ void SensorModule_Update() {
 
 #ifdef ENABLE_SENSOR_INA219
 	
-	EXECUTE_EVERY(100)
+	EXECUTE_EVERY(125)
 
 		Log("INA219: volt=%.2f, curr=%.3f, pwr=%.1f",
 			Sensor_INA219.getBusVoltage_V(),
@@ -79,13 +88,22 @@ void SensorModule_Update() {
 #endif // ENABLE_SENSOR_INA219
 
 #ifdef ENABLE_SENSOR_HX711
-	Sensor_HX711.update();
-	Sensor_HX711.print();
+	EXECUTE_EVERY(25)
+		Sensor_HX711.update();
+		Sensor_HX711.print("HX711");
+	EXECUTE_EVERY_END
 #endif // ENABLE_SENSOR_HX711
+
+#ifdef ENABLE_SENSOR_HX711_2
+	EXECUTE_EVERY(25)
+		Sensor_HX711_2.update();
+		Sensor_HX711_2.print("HX711#2");
+	EXECUTE_EVERY_END
+#endif // ENABLE_SENSOR_HX711_2
 
 #ifdef ENABLE_ACTOR_ESC
 
-	EXECUTE_EVERY(100)
+	EXECUTE_EVERY(250)
 		
 		float app = 0.0f;
 		if(USE_ANALOG_THROTTLE)
@@ -138,6 +156,10 @@ void SensorModule_PrintStatus()
 #ifdef ENABLE_SENSOR_HX711
 	//Sensor_HX711.print();
 #endif // ENABLE_SENSOR_HX711
+
+#ifdef ENABLE_SENSOR_HX711_2
+	//Sensor_HX711_2.print();
+#endif // ENABLE_SENSOR_HX711_2
 
 
 #endif // ENABLE_PRINT_STATUS_SENSOR

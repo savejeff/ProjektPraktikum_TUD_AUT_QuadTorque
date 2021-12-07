@@ -133,8 +133,8 @@
 	#define PIN_HX711_DATA 9
 
 	// Thrust Force 
-	//#define PIN_HX711_CLOCK 7
-	//#define PIN_HX711_DATA 6
+	#define PIN_HX711_2_CLOCK 7
+	#define PIN_HX711_2_DATA 6
 
 	#define PIN_BUTTON1 4
 	#define BUTTON1_TRIGGER_LEVEL LOW
