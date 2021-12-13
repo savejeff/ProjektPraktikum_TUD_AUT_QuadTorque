@@ -1,6 +1,141 @@
 from ImportsBase import *
 
 
+def Analyse_PhaseCurrent(datestring, logfilename, enable_offset_correct=False):
+	"""
+	Take a logfile and creates a json file with extracted feature vector for every period
+	:param datestring: 
+	:param logfilename: 
+	:return: 
+	"""
+
+	logfilefolder = getLogfilefolder(datestring)
+
+	Data = LoadData(datestring, logfilename)
+
+	if True: # Extract / Process Osci Logging
+
+		results = {}
+
+		Trace_Rename(Data, GROUP_OSCI, TRACE_CHANNEL2_V, TRACE_VOLTAGE)
+
+		# Conversion from Shunt Voltage to Phase current
+		Trace_Rename(Data, GROUP_OSCI, TRACE_CHANNEL1_V, TRACE_PHASE_CURRENT)
+		Trace_Scale(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, ScaleFactor=100)
+
+		TRACE_PHASE_CURRENT_SMOOTH = TRACE_PHASE_CURRENT + TRACE_POSTFIX_SMOOTH
+
+		# Moving Avg filter to get a clean sinus/zero crossing
+		Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT_SMOOTH, t_range=0.0001)
+		Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT_SMOOTH, TRACE_PHASE_CURRENT_SMOOTH, t_range=0.0001)
+
+		# Find zero Crossings by detect sign change
+		Trace_ApplyFunc(Data, GROUP_OSCI, TRACE_PHASE_CURRENT_SMOOTH, func=lambda x : 1 if x >= 0 else 0, TRACE_RES=TRACE_TEST)
+		Trace_Diff(Data, GROUP_OSCI, TRACE_TEST, TRACE_TEST2)
+
+		list_index_period_start = []
+		list_index_period_half = []
+		for i in range(Group_Length(Data, GROUP_OSCI)):
+			v = Data[GROUP_OSCI][TRACE_TEST2][i]
+
+			if v < -0.1: # Check if negative flank -> period start
+				list_index_period_start.append(i)
+			if v > 0.1: # Check if negative flank -> period start
+				list_index_period_half.append(i)
+
+		print(f"list_index_period_start: {list_index_period_start}")
+
+		# list_index_period_start like [ 1, 5, 7, 8 ]
+		# list_index_period_half like [ 2, 6, 7.5, 9 ]
+
+
+		# Split Complete Trace into seperate periods
+		GROUPS_PERIOD = []
+		GROUP_PERIOD_FORMAT = "Periode_{}"
+		for period_num, (i_start, i_end) in enumerate(zip(list_index_period_start, list_index_period_start[1:])):
+
+			print(f"period#{period_num}: i_start={i_start}, i_end={i_end}")
+
+			GROUP_NAME = GROUP_PERIOD_FORMAT.format(period_num)
+
+
+			Group_Crop(Data, GROUP_OSCI,
+					   t_start=index2time(Data[GROUP_OSCI], i_start),
+					   t_end=index2time(Data[GROUP_OSCI], i_end),
+					   GROUP_RES=GROUP_NAME
+					   )
+
+			GROUPS_PERIOD.append(GROUP_NAME)
+
+
+		# Go over all periods and extract values
+		for GROUP in GROUPS_PERIOD:
+
+			results[GROUP] = {}
+
+			# Remove timeoffset of Period
+			Trace_Scale(Data, GROUP, TRACE_TIME, Offset=-Data[GROUP][TRACE_TIME][0], TRACE_RES = TRACE_TIME + "_noOffset")
+
+			# Find First and second half of period (negative first, positive second)
+			index_period_half = None
+			for i in range(Group_Length(Data, GROUP)):
+				v = Data[GROUP][TRACE_TEST2][i]
+
+				if v > 0.1: # Check if negative flank -> period start
+					index_period_half = i
+					break
+			print(f"index_period_half: {index_period_half}")
+
+			#assert index_period_half != None
+			if index_period_half == None:
+				print("Error: Period half detection failed/not found")
+				continue
+
+
+			if enable_offset_correct:
+				current_offset = mean(Data[GROUP][TRACE_PHASE_CURRENT])
+			else:
+				current_offset = 0
+
+			Trace_Copy(Data, GROUP, TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT + TRACE_POSTFIX_CORRECTED)
+
+			# extract values for specific part of period
+			def Analyse_PeriodHalf(i_start, i_end, is_neg=False):
+
+				# Get Avg Current in this part of period
+				current_avg = mean(Data[GROUP][TRACE_PHASE_CURRENT][i_start:i_end])
+				current_avg -= current_offset
+
+				if is_neg:
+					current_avg *= -1
+					Trace_ApplyFunc_ValueIndex(Data, GROUP, TRACE_PHASE_CURRENT + TRACE_POSTFIX_CORRECTED,
+											   lambda i, x: x * -1 if i_start <= i <= i_end else x
+											   )
+				#Trace_Scale(Data, GROUP_OSCI, TRACE_PHASE_CURRENT + TRACE_POSTFIX_CORRECTED, ScaleFactor=-1)
+
+				print(f"{GROUP}: current_avg={current_avg}")
+
+
+			Analyse_PeriodHalf(0, index_period_half, is_neg=True)
+			Analyse_PeriodHalf(index_period_half, Group_Length(Data, GROUP), is_neg=False)
+
+			current_period = mean(Data[GROUP][TRACE_PHASE_CURRENT + TRACE_POSTFIX_CORRECTED])
+
+			current_period *= 3.0 / 2.0
+
+			print(f"current_period: {current_period}")
+
+
+			results[GROUP][TAG_T_START] = Data[GROUP][TRACE_TIME][0]
+			results[GROUP][TAG_T_END] = Data[GROUP][TRACE_TIME][-1]
+			results[GROUP][TAG_CURRENT_PERIOD] = current_period
+
+
+		#OpenDiadem_Data(Data, PATH.PATH_TDV_ALANYSIS_PERIODS)
+
+		#store_json(results, f"results_{datestring}_{logfilename}", PATH.DIR_TMP)
+		return results
+
 if __name__ == '__main__':
 
 	if False: # Convert Osci Logging from .csv to .mat
@@ -39,7 +174,7 @@ if __name__ == '__main__':
 			store_mat(Data, path_join(logfilefolder, logfilename_out))
 
 
-	if True: # Example Process Osci Logging .mat and store to _mod.mat
+	if False: # Example Process Osci Logging .mat and store to _mod.mat
 
 		datestring, logfilename = "2021-11-22_S", "bldc_phase_current_phase_to_ground_voltage_throttle_100"
 
@@ -64,6 +199,17 @@ if __name__ == '__main__':
 			Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT + "_smooth", t_range=0.0001)
 			Trace_Smooth(Data, GROUP_OSCI + "_TEST", TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT + "_smooth", t_range=0.0001)
 
+			for i in range(Group_Length(Data, GROUP_OSCI)):
+				t = Data[GROUP_OSCI][TRACE_TIME][i]
+				v = Data[GROUP_OSCI][TRACE_PHASE_CURRENT][i]
+
+			Trace_Diff(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_RES=TRACE_TEST)
+			Trace_ApplyFunc(Data, GROUP_OSCI, TRACE_TEST, func=lambda x : x > 10, TRACE_RES=TRACE_TEST2)
+
+			i_start = 0
+			i_end = 100
+			mean(Data[GROUP_OSCI][TRACE_TIME][i_start:i_end])
+
 			#OpenDiadem_Data(Data, PATH.PATH_TDV_TMP)
 			pass
 
@@ -72,6 +218,70 @@ if __name__ == '__main__':
 		logfilename_out = logfilename + "_mod"
 		store_mat(Data, path_join(logfilefolder, logfilename_out))
 
+
+	if False: # Example Process Osci Phase Detection
+
+
+		#datestring, logfilename = "2021-11-22", "bldc_phase_current_phase_to_phase_voltage_throttle_100"
+		datestring, logfilename = "2021-11-22", "bldc_phase_current_phase_to_phase_voltage_throttle_50"
+
+
+		path_exp = path_join(PATH.DIR_EXPERIMENTS, "Test_Phase_Detection")
+		mkdir(path_exp)
+
+		results = Analyse_PhaseCurrent(datestring, logfilename, enable_offset_correct=False)
+
+		store_json(results, f" results_{datestring}_{logfilename}", path_exp)
+
+		#OpenDiadem_Data(Data, PATH.PATH_TDV_TMP)
+		OpenDiadem_Data(Data, PATH.PATH_TDV_ALANYSIS_PERIODS)
+
+		#logfilename_out = logfilename + "_mod"
+		#store_mat(Data, path_join(logfilefolder, logfilename_out))
+
+
+
+	if True: # Process Results
+
+
+		path_exp = path_join(PATH.DIR_EXPERIMENTS, "Test_Phase_Detection_VariableThrottle")
+		mkdir(path_exp)
+
+		LIST_LOGFILES = (
+			("throttle 100", "2021-11-22", "bldc_phase_current_phase_to_phase_voltage_throttle_100"),
+			("throttle 50", "2021-11-22", "bldc_phase_current_phase_to_phase_voltage_throttle_50"),
+			("throttle 30", "2021-11-22", "bldc_phase_current_phase_to_phase_voltage_throttle_30")
+		)
+
+
+		plot_data = {}
+		for name, datestring, logfilename in LIST_LOGFILES:
+
+			results = Analyse_PhaseCurrent(datestring, logfilename)
+			#results = Analyse_PhaseCurrent(datestring, logfilename, enable_offset_correct=True)
+
+			#results = load_json(f"results_{datestring}_{logfilename}", PATH.DIR_TMP)
+
+			all_current = []
+			for Period in results:
+				print(results[Period][TAG_CURRENT_PERIOD])
+				all_current.append(results[Period][TAG_CURRENT_PERIOD])
+
+			#print(mean(all_current))
+
+			plot_data[name] = all_current
+
+
+		store_json(plot_data, "plot_data", path_exp)
+
+		plot_setup("Phase Current over Throttle", ylable="Current in A")
+
+		#plot_point(list(enumerate(all_current)))
+
+		plot_box(plot_data)
+
+		plot_tofile(path_join(path_exp, "example_plot.png"))
+		plot_show()
 
 
 	if False: # Convert Arduino Loggings

@@ -2,6 +2,7 @@ FILENAME_PATH_JSON = "paths.json"
 class paths:
 
 	DIR_LOGFILES = "../../Logdaten"
+	DIR_EXPERIMENTS = "../../Experimente"
 	DIR_TMP = "./tmp"
 	PATH_DIADEM = r"C:\Program Files\National Instruments\DIAdem 2019\DIAdem.exe"
 	#PATH_DIADEM_DOCUMENTS = r"C:\Users\Public\Documents\National Instruments\DIAdem 2019\Documents"
@@ -18,6 +19,7 @@ class paths:
 		self.PATH_TDV_OVERVIEW = path_join(self.PATH_DIADEM_DOCUMENTS, "View_Overview.TDV")
 		self.PATH_TDV_DEFAULT = path_join(self.PATH_DIADEM_DOCUMENTS, "View_Log_Default.TDV")
 		self.PATH_TDV_TMP = path_join(self.PATH_DIADEM_DOCUMENTS, "TMP.TDV")
+		self.PATH_TDV_ALANYSIS_PERIODS = path_join(self.PATH_DIADEM_DOCUMENTS, "Analyse_Periods.TDV")
 
 		if not folder_exisits(self.DIR_TMP):
 			mkdir(self.DIR_TMP)
