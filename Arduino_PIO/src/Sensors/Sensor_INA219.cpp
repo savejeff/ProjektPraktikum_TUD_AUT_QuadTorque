@@ -1,30 +1,4 @@
-/*!
- * @file Adafruit_INA219.cpp
- *
- * @mainpage Adafruit INA219 current/power monitor IC
- *
- * @section intro_sec Introduction
- *
- *  Driver for the INA219 current sensor
- *
- *  This is a library for the Adafruit INA219 breakout
- *  ----> https://www.adafruit.com/products/904
- *
- *  Adafruit invests time and resources providing this open source code,
- *  please support Adafruit and open-source hardware by purchasing
- *  products from Adafruit!
- *
- * @section author Author
- *
- * Written by Kevin "KTOWN" Townsend for Adafruit Industries.
- *
- * @section license License
- *
- * BSD license, all text here must be included in any redistribution.
- *
- */
-
-#include "Adafruit_INA219.h"
+#include "Sensor_INA219.h"
 
 
 
@@ -81,21 +55,14 @@ enum {
 	INA219_CONFIG_SADCRES_9BIT_1S_84US = (0x0000),   // 1 x 9-bit shunt sample
 	INA219_CONFIG_SADCRES_10BIT_1S_148US = (0x0008), // 1 x 10-bit shunt sample
 	INA219_CONFIG_SADCRES_11BIT_1S_276US = (0x0010), // 1 x 11-bit shunt sample
-	INA219_CONFIG_SADCRES_12BIT_1S_532US = (0x0018), // 1 x 12-bit shunt sample
-	INA219_CONFIG_SADCRES_12BIT_2S_1060US =
-			(0x0048), // 2 x 12-bit shunt samples averaged together
-	INA219_CONFIG_SADCRES_12BIT_4S_2130US =
-			(0x0050), // 4 x 12-bit shunt samples averaged together
-	INA219_CONFIG_SADCRES_12BIT_8S_4260US =
-			(0x0058), // 8 x 12-bit shunt samples averaged together
-	INA219_CONFIG_SADCRES_12BIT_16S_8510US =
-			(0x0060), // 16 x 12-bit shunt samples averaged together
-	INA219_CONFIG_SADCRES_12BIT_32S_17MS =
-			(0x0068), // 32 x 12-bit shunt samples averaged together
-	INA219_CONFIG_SADCRES_12BIT_64S_34MS =
-			(0x0070), // 64 x 12-bit shunt samples averaged together
-	INA219_CONFIG_SADCRES_12BIT_128S_69MS =
-			(0x0078), // 128 x 12-bit shunt samples averaged together
+	INA219_CONFIG_SADCRES_12BIT_1S_532US = (0x0018), // 1 x 12-bit shunt sample (takes 0.532ms)
+	INA219_CONFIG_SADCRES_12BIT_2S_1060US = (0x0048), // 2 x 12-bit shunt samples averaged together (takes 1.06ms)
+	INA219_CONFIG_SADCRES_12BIT_4S_2130US = (0x0050), // 4 x 12-bit shunt samples averaged together (takes 2.13ms)
+	INA219_CONFIG_SADCRES_12BIT_8S_4260US = (0x0058), // 8 x 12-bit shunt samples averaged together (takes 4.26 ms)
+	INA219_CONFIG_SADCRES_12BIT_16S_8510US = (0x0060), // 16 x 12-bit shunt samples averaged together (takes 8.51ms)
+	INA219_CONFIG_SADCRES_12BIT_32S_17MS = (0x0068), // 32 x 12-bit shunt samples averaged together (takes 17ms)
+	INA219_CONFIG_SADCRES_12BIT_64S_34MS = (0x0070), // 64 x 12-bit shunt samples averaged together (takes 34ms)
+	INA219_CONFIG_SADCRES_12BIT_128S_69MS = (0x0078), // 128 x 12-bit shunt samples averaged together (takes 69ms)
 };
 
 /** mask for operating mode bits **/
@@ -130,13 +97,43 @@ enum {
 
 
 /*!
+ *  @brief  Instantiates a new INA219 class
+ *  @param addr the I2C address the device can be found on. Default is 0x40
+ */
+Sensor_INA219_Class::Sensor_INA219_Class(jI2C *theWire, uint8_t addr) {
+	_i2c = theWire;
+	multisample_mode = INA219_CONFIG_SADCRES_12BIT_1S_532US; 
+	ina219_i2caddr = addr;
+	currentDivider_mA = 0;
+	pwrMultiplier_mW = 0.0f;
+}
+
+/*!
+ *  @brief  Setups the HW (defaults to 32V and 2A for calibration values)
+ *  @param theWire the TwoWire object to use
+ */
+void Sensor_INA219_Class::begin() {
+	
+	//TODO test reset
+	//wireWriteRegister(INA219_REG_CONFIG, INA219_CONFIG_RESET);
+	
+	setCalibration_32V_2A();
+}
+
+void Sensor_INA219_Class::end() {
+	powerSave(true);
+}
+
+
+
+/*!
  *  @brief  Sends a single command byte over I2C
  *  @param  reg
  *          register address
  *  @param  value
  *          value to write
  */
-void Adafruit_INA219::wireWriteRegister(uint8_t reg, uint16_t value) {
+void Sensor_INA219_Class::wireWriteRegister(uint8_t reg, uint16_t value) {
 	_i2c->beginTransmission(ina219_i2caddr);
 	_i2c->write(reg);                 // Register
 	_i2c->write((value >> 8) & 0xFF); // Upper 8-bits
@@ -151,7 +148,7 @@ void Adafruit_INA219::wireWriteRegister(uint8_t reg, uint16_t value) {
  *  @param  *value
  *          read value
  */
-void Adafruit_INA219::wireReadRegister(uint8_t reg, uint16_t *value) {
+void Sensor_INA219_Class::wireReadRegister(uint8_t reg, uint16_t *value) {
 
 	_i2c->beginTransmission(ina219_i2caddr);
 	_i2c->write(reg); // Register
@@ -164,6 +161,28 @@ void Adafruit_INA219::wireReadRegister(uint8_t reg, uint16_t *value) {
 	*value = ((_i2c->read() << 8) | _i2c->read());
 }
 
+
+void Sensor_INA219_Class::setMultisampleMode(uint8_t sample_count)
+{
+	if(sample_count == 1)
+		multisample_mode = INA219_CONFIG_SADCRES_12BIT_1S_532US; 
+	else if(sample_count == 2)
+		multisample_mode = INA219_CONFIG_SADCRES_12BIT_2S_1060US;
+	else if(sample_count == 4)
+		multisample_mode = INA219_CONFIG_SADCRES_12BIT_4S_2130US;
+	else if(sample_count == 8)
+		multisample_mode = INA219_CONFIG_SADCRES_12BIT_8S_4260US;
+	else if(sample_count == 16)
+		multisample_mode = INA219_CONFIG_SADCRES_12BIT_16S_8510US; 
+	else if(sample_count == 32)
+		multisample_mode = INA219_CONFIG_SADCRES_12BIT_32S_17MS;
+	else if(sample_count == 64)
+		multisample_mode = INA219_CONFIG_SADCRES_12BIT_64S_34MS;
+	else if(sample_count == 128)
+		multisample_mode = INA219_CONFIG_SADCRES_12BIT_128S_69MS; 
+	
+}
+
 /*!
  *  @brief  Configures to INA219 to be able to measure up to 32V and 2A
  *          of current.  Each unit of current corresponds to 100uA, and
@@ -171,7 +190,7 @@ void Adafruit_INA219::wireReadRegister(uint8_t reg, uint16_t *value) {
  *          occurs at 3.2A.
  *  @note   These calculations assume a 0.1 ohm resistor is present
  */
-void Adafruit_INA219::setCalibration_32V_2A() {
+void Sensor_INA219_Class::setCalibration_32V_2A() {
 	// By default we use a pretty huge range for the input voltage,
 	// which probably isn't the most appropriate choice for system
 	// that don't use a lot of power.  But all of the calculations
@@ -254,7 +273,7 @@ void Adafruit_INA219::setCalibration_32V_2A() {
 	// Set Config register to take into account the settings above
 	uint16_t config = INA219_CONFIG_BVOLTAGERANGE_32V |
 										INA219_CONFIG_GAIN_8_320MV | INA219_CONFIG_BADCRES_12BIT |
-										INA219_CONFIG_SADCRES_12BIT_1S_532US |
+										multisample_mode |
 										INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 	wireWriteRegister(INA219_REG_CONFIG, config);
 }
@@ -266,7 +285,7 @@ void Adafruit_INA219::setCalibration_32V_2A() {
  *          occurs at 3.2A.
  *  @note   These calculations assume a 0.1 ohm resistor is present
  */
-void Adafruit_INA219::setCalibration(float resistor, float current_range) 
+void Sensor_INA219_Class::setCalibration(float resistor, float current_range) 
 {
 	// By default we use a pretty huge range for the input voltage,
 	// which probably isn't the most appropriate choice for system
@@ -364,28 +383,10 @@ void Adafruit_INA219::setCalibration(float resistor, float current_range)
 	// Set Config register to take into account the settings above
 	uint16_t config = INA219_CONFIG_BVOLTAGERANGE_32V |
 										INA219_CONFIG_GAIN_8_320MV | INA219_CONFIG_BADCRES_12BIT |
-										INA219_CONFIG_SADCRES_12BIT_1S_532US |
+										multisample_mode |
 										INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 	wireWriteRegister(INA219_REG_CONFIG, config);
 }
-
-/*!
- *  @brief  Set power save mode according to parameters
- *  @param  on
- *          boolean value
- */
-void Adafruit_INA219::powerSave(bool on) {
-	uint16_t current;
-	wireReadRegister(INA219_REG_CONFIG, &current);
-	uint8_t next;
-	if (on) {
-		next = current | INA219_CONFIG_MODE_POWERDOWN; 
-	} else {
-		next = current & ~INA219_CONFIG_MODE_POWERDOWN; 
-	}
-	wireWriteRegister(INA219_REG_CONFIG, next);
-}
-
 
 /*!
  *  @brief  Configures to INA219 to be able to measure up to 32V and 1A
@@ -394,7 +395,7 @@ void Adafruit_INA219::powerSave(bool on) {
  *          1.3A.
  *  @note   These calculations assume a 0.1 ohm resistor is present
  */
-void Adafruit_INA219::setCalibration_32V_1A() {
+void Sensor_INA219_Class::setCalibration_32V_1A() {
 	// By default we use a pretty huge range for the input voltage,
 	// which probably isn't the most appropriate choice for system
 	// that don't use a lot of power.  But all of the calculations
@@ -471,7 +472,7 @@ void Adafruit_INA219::setCalibration_32V_1A() {
 	// Set Config register to take into account the settings above
 	uint16_t config = INA219_CONFIG_BVOLTAGERANGE_32V |
 										INA219_CONFIG_GAIN_8_320MV | INA219_CONFIG_BADCRES_12BIT |
-										INA219_CONFIG_SADCRES_12BIT_1S_532US |
+										multisample_mode |
 										INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 	wireWriteRegister(INA219_REG_CONFIG, config);
 }
@@ -481,7 +482,7 @@ void Adafruit_INA219::setCalibration_32V_1A() {
  *     current measurement (0.1mA), at the expense of
  *     only supporting 16V at 400mA max.
  */
-void Adafruit_INA219::setCalibration_16V_400mA() {
+void Sensor_INA219_Class::setCalibration_16V_400mA() {
 
 	// Calibration which uses the highest precision for
 	// current measurement (0.1mA), at the expense of
@@ -559,44 +560,36 @@ void Adafruit_INA219::setCalibration_16V_400mA() {
 	// Set Config register to take into account the settings above
 	uint16_t config = INA219_CONFIG_BVOLTAGERANGE_16V |
 										INA219_CONFIG_GAIN_1_40MV | INA219_CONFIG_BADCRES_12BIT |
-										INA219_CONFIG_SADCRES_12BIT_1S_532US |
+										multisample_mode |
 										INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 	wireWriteRegister(INA219_REG_CONFIG, config);
 }
 
-/*!
- *  @brief  Instantiates a new INA219 class
- *  @param addr the I2C address the device can be found on. Default is 0x40
- */
-Adafruit_INA219::Adafruit_INA219(uint8_t addr) {
-	ina219_i2caddr = addr;
-	currentDivider_mA = 0;
-	pwrMultiplier_mW = 0.0f;
-}
 
 /*!
- *  @brief  Setups the HW (defaults to 32V and 2A for calibration values)
- *  @param theWire the TwoWire object to use
+ *  @brief  Set power save mode according to parameters
+ *  @param  on
+ *          boolean value
  */
-void Adafruit_INA219::begin(jI2C *theWire) {
-	_i2c = theWire;
-	init();
+void Sensor_INA219_Class::powerSave(bool on) {
+	uint16_t current;
+	wireReadRegister(INA219_REG_CONFIG, &current);
+	uint8_t next;
+	if (on) {
+		next = current | INA219_CONFIG_MODE_POWERDOWN; 
+	} else {
+		next = current & ~INA219_CONFIG_MODE_POWERDOWN; 
+	}
+	wireWriteRegister(INA219_REG_CONFIG, next);
 }
 
-/*!
- *  @brief  begin I2C and set up the hardware
- */
-void Adafruit_INA219::init() {
-	//_i2c->begin();
-	// Set chip to large range config values to start
-	setCalibration_32V_2A();
-}
+
 
 /*!
  *  @brief  Gets the raw bus voltage (16-bit signed integer, so +-32767)
  *  @return the raw bus voltage reading
  */
-int16_t Adafruit_INA219::getBusVoltage_raw() {
+int16_t Sensor_INA219_Class::getBusVoltage_raw() {
 	uint16_t value;
 	wireReadRegister(INA219_REG_BUSVOLTAGE, &value);
 
@@ -608,7 +601,7 @@ int16_t Adafruit_INA219::getBusVoltage_raw() {
  *  @brief  Gets the raw shunt voltage (16-bit signed integer, so +-32767)
  *  @return the raw shunt voltage reading
  */
-int16_t Adafruit_INA219::getShuntVoltage_raw() {
+int16_t Sensor_INA219_Class::getShuntVoltage_raw() {
 	uint16_t value;
 	wireReadRegister(INA219_REG_SHUNTVOLTAGE, &value);
 	return (int16_t)value;
@@ -618,7 +611,7 @@ int16_t Adafruit_INA219::getShuntVoltage_raw() {
  *  @brief  Gets the raw current value (16-bit signed integer, so +-32767)
  *  @return the raw current reading
  */
-int16_t Adafruit_INA219::getCurrent_raw() {
+int16_t Sensor_INA219_Class::getCurrent_raw() {
 	uint16_t value;
 
 	// Sometimes a sharp load will reset the INA219, which will
@@ -637,7 +630,7 @@ int16_t Adafruit_INA219::getCurrent_raw() {
  *  @brief  Gets the raw power value (16-bit signed integer, so +-32767)
  *  @return raw power reading
  */
-int16_t Adafruit_INA219::getPower_raw() {
+int16_t Sensor_INA219_Class::getPower_raw() {
 	uint16_t value;
 
 	// Sometimes a sharp load will reset the INA219, which will
@@ -656,7 +649,7 @@ int16_t Adafruit_INA219::getPower_raw() {
  *  @brief  Gets the shunt voltage in mV (so +-327mV)
  *  @return the shunt voltage converted to millivolts
  */
-float Adafruit_INA219::getShuntVoltage_mV() {
+float Sensor_INA219_Class::getShuntVoltage_mV() {
 	int16_t value;
 	value = getShuntVoltage_raw();
 	return value * 0.01;
@@ -666,7 +659,7 @@ float Adafruit_INA219::getShuntVoltage_mV() {
  *  @brief  Gets the shunt voltage in volts
  *  @return the bus voltage converted to volts
  */
-float Adafruit_INA219::getBusVoltage_V() {
+float Sensor_INA219_Class::getBusVoltage_V() {
 	int16_t value = getBusVoltage_raw();
 	return value * 0.001;
 }
@@ -676,13 +669,13 @@ float Adafruit_INA219::getBusVoltage_V() {
  *          config settings and current LSB
  *  @return the current reading convereted to milliamps
  */
-float Adafruit_INA219::getCurrent_mA() {
+float Sensor_INA219_Class::getCurrent_mA() {
 	float valueDec = getCurrent_raw();
 	valueDec /= currentDivider_mA;
 	return valueDec;
 }
 
-float Adafruit_INA219::getCurrent_A() {
+float Sensor_INA219_Class::getCurrent_A() {
 	float valueDec = getCurrent_raw();
 	valueDec /= (currentDivider_mA * 1000.0f);
 	return valueDec;
@@ -693,7 +686,7 @@ float Adafruit_INA219::getCurrent_A() {
  *          config settings and current LSB
  *  @return power reading converted to milliwatts
  */
-float Adafruit_INA219::getPower_W() {
+float Sensor_INA219_Class::getPower_W() {
 	float valueDec = getPower_raw();
 	valueDec *= (pwrMultiplier_mW / 1000.0f);
 	return valueDec;

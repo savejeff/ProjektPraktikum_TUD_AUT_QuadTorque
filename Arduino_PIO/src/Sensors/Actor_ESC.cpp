@@ -63,7 +63,7 @@ void Actor_ESC_Class::update()
 	}
 	else
 	{
-		
+		Log("esc: startup=0");
 		uint8_t appi = app * 100;
 		uint8_t angle;
 		if(_has_reverse)

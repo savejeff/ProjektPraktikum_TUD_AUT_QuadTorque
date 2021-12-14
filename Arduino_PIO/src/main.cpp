@@ -7,6 +7,7 @@
 
 bool terminate = false;
 
+static int loopcount = 0;
 
 void Mode_Button1_onClick()
 {
@@ -27,6 +28,8 @@ void setup() {
 
 	SERCOM_Module_Init();
 
+	Log(F("_____________START__________________"));
+
 	SystemModule_Init();
 
 	GPIOModule_Init();
@@ -43,7 +46,7 @@ void setup() {
 		switchBoardLED(false);
 		delay(100);
 		jWatchdog_reset();
-	}	
+	}
 	
 	
 	while(!terminate)
@@ -64,7 +67,7 @@ void setup() {
 
 		EXECUTE_EVERY(1000)
 			
-			//LogD("loop");
+			LogD("loop: %d", loopcount++);
 
 		EXECUTE_EVERY_END
 

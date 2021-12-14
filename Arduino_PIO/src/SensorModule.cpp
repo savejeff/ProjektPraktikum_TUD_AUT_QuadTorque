@@ -10,9 +10,14 @@
 
 
 #ifdef ENABLE_SENSOR_INA219
-#include <Adafruit_INA219.h>
-Adafruit_INA219 Sensor_INA219;
+#ifndef I2C_INA219
+#define I2C_INA219 I2C0
+#endif
+
+#include "Sensors/Sensor_INA219.h"
+Sensor_INA219_Class Sensor_INA219(&I2C_INA219);
 #endif // ENABLE_SENSOR_INA219
+
 
 
 #ifdef ENABLE_SENSOR_HX711
@@ -27,28 +32,30 @@ Sensor_HX711_Class Sensor_HX711_2(PIN_HX711_2_CLOCK, PIN_HX711_2_DATA);
 
 #ifdef ENABLE_ACTOR_ESC
 #include "Sensors/Actor_ESC.h"
-Actor_ESC_Class Actor_ESC(PIN_PWM_OUT_ESC, PIN_ESC_PWR, true);
+Actor_ESC_Class Actor_ESC(PIN_PWM_OUT_ESC, PIN_ESC_PWR, false);
 #endif // ENABLE_ACTOR_ESC
-
 
 #endif // ENABLE_SENSOR
 
 void SensorModule_Init()
 {
 #ifdef ENABLE_SENSOR
-	Log("sen.state: init");
+	Log(F("sen.state: init"));
 
 #ifdef ENABLE_SENSOR_INA219
-#ifndef I2C_INA219
-#define I2C_INA219 I2C0
-#endif 
-	Sensor_INA219.begin(&I2C_INA219);
+
+	Sensor_INA219.begin();
+	//Sensor_INA219.setMultisampleMode(64);
+	Sensor_INA219.setMultisampleMode(128);
+	
 	//Sensor_INA219.setCalibration(0.001f, 10.0f);
+	//Sensor_INA219.setCalibration_16V_400mA();
 	//Sensor_INA219.setCalibration_32V_2A();
 	Sensor_INA219.setCalibration(0.01f, 20.0f);
 	//Sensor_INA219.setCalibration(0.001f, 320.0f);
 	
 #endif // ENABLE_SENSOR_INA219
+
 
 #ifdef ENABLE_SENSOR_HX711
 	Sensor_HX711.begin();
@@ -61,6 +68,8 @@ void SensorModule_Init()
 #ifdef ENABLE_ACTOR_ESC
 	Actor_ESC.begin();
 #endif // ENABLE_ACTOR_ESC
+
+	Log(F("sen.state: init"));
 
 #endif // ENABLE_SENSOR
 }
@@ -88,14 +97,14 @@ void SensorModule_Update() {
 #endif // ENABLE_SENSOR_INA219
 
 #ifdef ENABLE_SENSOR_HX711
-	EXECUTE_EVERY(25)
+	EXECUTE_EVERY(100)
 		Sensor_HX711.update();
 		Sensor_HX711.print("HX711");
 	EXECUTE_EVERY_END
 #endif // ENABLE_SENSOR_HX711
 
 #ifdef ENABLE_SENSOR_HX711_2
-	EXECUTE_EVERY(25)
+	EXECUTE_EVERY(100)
 		Sensor_HX711_2.update();
 		Sensor_HX711_2.print("HX711#2");
 	EXECUTE_EVERY_END
@@ -144,6 +153,10 @@ void SensorModule_Update() {
 void SensorModule_End()
 {
 #ifdef ENABLE_SENSOR
+
+#ifdef ENABLE_SENSOR_INA219
+	Sensor_INA219.end();
+#endif // ENABLE_SENSOR_INA219
 
 #endif // ENABLE_SENSOR
 }

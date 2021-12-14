@@ -332,7 +332,8 @@ void GPIOModule_PrintStatus()
 			(((float) a0) / (1 << GPIO_ANALOG_RESOLUTION)) * getSysVoltage()
 		);
 
-	//TODO remove
+// TODO move to one sensor class
+#ifdef ENABLE_SENSOR_INA190
 	float v = (((float) a0) / (1 << GPIO_ANALOG_RESOLUTION)) * getSysVoltage();
 	v -= getSysVoltage() / 2.0f;
 
@@ -341,6 +342,7 @@ void GPIOModule_PrintStatus()
 	curr -= 0.077f;
 
 	LogD("INA190: v=%.3f, curr=%.5f", v, curr);
+#endif // ENABLE_SENSOR_INA190
 	
 #endif // ENABLE_ANALOG_IN_0
 
