@@ -470,6 +470,28 @@ TRACE_TO_UNITS = {
 }
 
 
+########## DATASET FEATURES ##########################
+
+FEAUTRE_MOTOR_KV = "Motor_KV"
+FEAUTRE_MOTOR_ID = "Motor_ID"
+FEAUTRE_PROPELLER_ID = "Propeller_ID"
+FEAUTRE_PROPELLER_DIAMETER = "Propeller_Diameter" #[in]
+FEAUTRE_PROPELLER_PITCH = "Propeller_Diameter" #[deg]
+
+FEATURE_THROTTLE = "Throttle" #[%]
+
+FEATURE_MOTOR_TORQUE = "Motor_Torque" #[NM]
+FEATURE_MOTOR_SPEED = "Motor_Speed" #[rpm]
+
+FEATURE_DC_CURRENT = "DC_Current" #[A]
+FEATURE_DC_VOLTAGE = "DC_Voltage" #[V]
+
+FEATURE_AC_CURRENT = "AC_Current" #[A]
+FEATURE_AC_PERIOD = "AC_Period" #[s] duration of period
+
+
+
+
 CORNER_NUM = "num"
 CORNER_T_START = "t_start"
 CORNER_T_END = "t_end"

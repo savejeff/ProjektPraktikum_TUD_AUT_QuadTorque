@@ -552,6 +552,13 @@ def plot_bar(posis, values, bar_width=None, color=None, label=None, yerr=None):
 			align='center', ecolor='black', capsize=10
 			)
 
+def plot_errobar(posis, values, bar_width=None, color=None, label=None, yerr=None):
+	# https://matplotlib.org/3.1.1/gallery/lines_bars_and_markers/errorbar_limits_simple.html#sphx-glr-gallery-lines-bars-and-markers-errorbar-limits-simple-py
+
+	# TODO implement
+	#plt.errorbar(x, y + 3, yerr=yerr, label='both limits (default)')
+	pass
+
 
 def plot_box(data_dict):
 	"""
@@ -567,7 +574,44 @@ def plot_box(data_dict):
 	plot_setup_grid_lines()
 
 
+def plot_box_xy(data_dict):
+	"""
+	:param data_dict: dict of {x -> sample-list}
+	example:
+	{
+		0.1 : { 10.1, 9.0, 9.5, ... },
+		0.2 : { 20.0, 21.4, 15.1, ... },
+		...
+	}
+	"""
 
+	values_y = list(data_dict.values())
+	values_x = list(data_dict.keys())
+	plt.boxplot(values_y, positions=values_x,
+				widths=(0.5 * (max(values_x) - min(values_x)) / len(values_x)),
+				manage_ticks = False
+				)
+	#ax.set_xticklabels(labels=labels, rotation=90)
+	#if len(lables) > 3:
+	#	plot_get_current_axis().set_xticklabels(labels=lables, rotation=90)
+	#plot_setup_grid_lines()
+
+
+def plot_regression_linear(x : list , y : list, color=COLOR_RED):
+	"""
+	Plot a Linear Regression line matching the given x and y values
+	:param x: list of x values
+	:param y: list of y values
+	"""
+
+	from StatisticHelp import regression_linear
+	m, b = regression_linear(x, y)
+
+	x_min, x_max = min(x), max(x)
+	p_min = x_min, m * x_min + b
+	p_max = x_max, m * x_max + b
+
+	plot_xy([p_min, p_max], color=color)
 
 ###########################
 #      Plot3D Functions   #

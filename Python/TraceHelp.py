@@ -184,6 +184,17 @@ def Trace_getValue_atTime(Data, GROUP, TRACE, t, TIME_TRACE=TRACE_TIME, interpol
 
 	return time2value(Data[GROUP], t, TRACE, TIME_TRACE, interpolate)
 
+def Trace_getValues_TimeSegement(Data, GROUP, TRACE, t_start, t_end, TIME_TRACE=TRACE_TIME) -> list:
+	""" get values as list between t_start and t_end """
+
+	if isinstance(TRACE, list):
+		return [Trace_getValues_TimeSegement(Data, GROUP, T, t_start, t_end, TIME_TRACE) for T in TRACE]
+
+	i_start = time2index(Data[GROUP], t_start, TIME_TRACE)
+	i_end = time2index(Data[GROUP], t_end, TIME_TRACE)
+
+	return Data[GROUP][TRACE][i_start:i_end]
+
 
 def Group_Time_2_Index(Data, Group, Time):
 	""" returns index closest to given time """
@@ -358,6 +369,56 @@ def Trace_Create_byFunc(Data, GROUP, TRACE, func=lambda t: 0, INPUT_TRACE=TRACE_
 	""" Creates a Trace in the Given Group using the function given """
 	Trace_ApplyFunc(Data, GROUP, INPUT_TRACE, func, TRACE_RES=TRACE)
 
+
+
+def CreateGroup_FromSignals(Data, GROUP, SIGNALS : list, dt=None, LOOKUP_SIGNAL_TO_TRACE: dict = None, delete_signal=False):
+	"""
+	Creates a Group from Multiple "Signal"-Groups
+	Signal Groups are groups with only TRACE_TIME and (TRACE_VALUE or Group name as Trace name)
+	:param Data:
+	:param GROUP:
+	:param SIGNALS: list of Signals
+	:param dt: [s] force sample rate. if not given it is automaticly determined by signal groups
+	:param LOOKUP_SIGNAL_TO_TRACE: lookup {Signal -> Trace Name}
+	:param delete_signal: if true all source signal groups are deleted
+	"""
+
+	if LOOKUP_SIGNAL_TO_TRACE == None:
+		LOOKUP_SIGNAL_TO_TRACE = {}
+
+	t_start, t_end, dts = None, None, []
+	for SIGNAL in SIGNALS:
+		t_s, t_e = Group_getTimeStartEnd(Data, SIGNAL)
+		dt = (t_e - t_s) / Group_Length(Data, SIGNAL)
+
+		if t_start == None or t_s < t_start:
+			t_start = t_s
+		if t_end == None or t_e > t_end:
+			t_end = t_e
+
+		dts.append(dt)
+
+	if dt == None:
+		dt = median(dts)
+
+	Group_Create_Tstartend(Data, GROUP, dt, t_end, t_start)
+	for i, SIGNAL in enumerate(SIGNALS):
+
+
+		if SIGNAL in LOOKUP_SIGNAL_TO_TRACE:
+			TRACE = LOOKUP_SIGNAL_TO_TRACE[SIGNAL]
+		elif SIGNAL in Data[GROUP]:
+			TRACE = SIGNAL
+		elif TRACE_VALUE in Data[GROUP]:
+			TRACE = TRACE_VALUE
+		else:
+			print(f"Warning: CreateGroup_FromSignals - Trace for Signal {SIGNAL}")
+			continue
+
+		Trace_Resample(Data, SIGNAL, SIGNAL, GROUP, TRACE_NEW=TRACE)
+
+		if delete_signal:
+			Group_Delete(Data, SIGNAL)
 
 
 
