@@ -154,6 +154,15 @@ bool isFloatNumber(const String& s) {
  * ****************************************/
 
 
+bool is_valid(float x)
+{
+	//return !__isnanf(v);
+	return !isnan(x);
+}
+bool is_valid(double x)
+{
+	return !isnan(x);
+}
 
 
 /*

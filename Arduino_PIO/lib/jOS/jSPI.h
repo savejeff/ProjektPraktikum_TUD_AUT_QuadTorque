@@ -153,6 +153,11 @@ public:
 	{
 		_spi->transfer(data, size);
 	}
+
+	
+	void setCS(bool state) {
+		digitalWrite(_pin_cs, state);
+	}
 	
 };
 

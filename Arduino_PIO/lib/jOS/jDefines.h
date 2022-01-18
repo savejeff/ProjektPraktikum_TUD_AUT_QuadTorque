@@ -48,7 +48,9 @@
 
 #define LIMIT(LOWER, X, UPPER) ((X)<(LOWER)?(LOWER):((X)>(UPPER)?(UPPER):(X)))
 #define median3(a,b,c) (MAX(MIN(a,b), MIN(MAX(a,b),c)))
-#define MAP(value, FROM_MIN, FROM_MAX, TO_LOW, TO_HIGH) (map(LIMIT(FROM_MIN, value, FROM_MAX), FROM_MIN, FROM_MAX, TO_LOW, TO_HIGH))
+//#define MAP(value, FROM_MIN, FROM_MAX, TO_LOW, TO_HIGH) (map(LIMIT(FROM_MIN, value, FROM_MAX), FROM_MIN, FROM_MAX, TO_LOW, TO_HIGH))
+#define MAP(value, FROM_MIN, FROM_MAX, TO_LOW, TO_HIGH) ((LIMIT(FROM_MIN, value, FROM_MAX) - FROM_MIN) * (TO_HIGH - TO_LOW) / (FROM_MAX - FROM_MIN) + TO_LOW)
+
 
 #ifndef ULONG_MAX
 #define ULONG_MAX 0xFFFFFFFF
@@ -60,6 +62,11 @@
 	if (millis() - _last_time > (ms)) \
 	{ \
 		_last_time = millis();\
+
+#define EXECUTE_EVERY_NAME(last_time_variable, ms) { \
+	if (millis() - last_time_variable > (ms)) \
+	{ \
+		last_time_variable = millis();\
 
 #define EXECUTE_EVERY2(ms) { \
 	static ulong _last_time = 0; \
@@ -83,7 +90,20 @@
 #define TRACK_DT_MILLIS_START0 ulong _t0s = millis();
 #define TRACK_DT_MILLIS_END0(dt) ulong _t0e = millis(); int dt = _t0e - _t0s;
 
+#define TRACK_DT_MILLIS_START1 ulong _t1s = millis();
+#define TRACK_DT_MILLIS_END1(dt) ulong _t1e = millis(); int dt = _t1e - _t1s;
 
+#define TRACK_DT_MILLIS_START2 ulong _t2s = millis();
+#define TRACK_DT_MILLIS_END2(dt) ulong _t2e = millis(); int dt = _t2e - _t2s;
+
+#define TRACK_EXECUTE_DT_MS(dt_ms) static ulong _texlastms = millis(); \
+	int dt_ms = millis() - _texlastms; \
+	float dt = dt_ms * FACTOR_ms_2_s; \
+	_texlastms = millis();
+
+#define TRACK_EXECUTE_DT_S(dt_s) static ulong _texlasts = millis(); \
+	float dt_s = (millis() - _texlasts) * FACTOR_ms_2_s; \
+	_texlasts = millis();
 
 #define const_g 9.81
 
@@ -114,25 +134,26 @@
 #define FACTOR_s_2_hour (1.0f / 3600.0f)
 #define FACTOR_min_2_ms (1000 * 60)
 #define FACTOR_hour_2_ms (1000 * 3600)
-#define FACTOR_ms_2_s 1e-3f
+#define FACTOR_ms_2_s (1e-3f)
 #define FACTOR_ms_2_us (1000)
+#define FACTOR_us_2_ms (1e-3f)
 #define FACTOR_ms_2_ns (1000*1000)
 #define FACTOR_us_2_s (1.0 / (1e+6))
 
 //FACTOR GEOMETRIC
-#define FACTOR_MPS_2_KMH 3.6f
+#define FACTOR_MPS_2_KMH (3.6f)
 #define FACTOR_KMH_2_MPS (1.0f/FACTOR_MPS_2_KMH)
-#define FACTOR_G_2_MPSS 9.81f
+#define FACTOR_G_2_MPSS (9.81f)
 #define FACTOR_MPSS_2_G (1.0f/FACTOR_G_2_MPSS)
-#define FACTOR_M_2_KM 1e-3
-#define FACTOR_deg_2_rad 0.017453292519943295769236907684886
-#define FACTOR_rad_2_deg 57.295779513082320876798154814105
+#define FACTOR_M_2_KM (1e-3f)
+#define FACTOR_deg_2_rad (0.017453292519943295769236907684886)
+#define FACTOR_rad_2_deg (57.295779513082320876798154814105)
 
 //FACTOR Electric
-#define FACTOR_Ah_2_mAh 1000.0f
-#define FACTOR_A_2_mA 1000.0f
+#define FACTOR_Ah_2_mAh (1000)
+#define FACTOR_A_2_mA (1000)
 #define FACTOR_mA_2_A (1.0f/1000.0f)
-#define FACTOR_mAh_2_As 3.6f
+#define FACTOR_mAh_2_As (3.6f)
 #define FACTOR_As_2_mAh (1.0f / FACTOR_mAh_2_As)
 #define FACTOR_As_2_Ah (1.0f / (3.6f * 1000.0f))
 #define FACTOR_mW_2_W (1.0f / 1000.0f)

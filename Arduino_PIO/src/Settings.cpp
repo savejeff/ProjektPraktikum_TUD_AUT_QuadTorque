@@ -27,7 +27,7 @@
 #pragma region AUTOGEN_SETTINGS_CPP
 
 //ESC
-boolean USE_ANALOG_THROTTLE = true; //[%] 0.0 bis 1.0 to control throttle Position
+boolean USE_ANALOG_THROTTLE = false; //[%] 0.0 bis 1.0 to control throttle Position
 float APP = 0.0; //[%] 0.0 bis 1.0 to control throttle position
 long TIME_UPDATE_APP = 0.0; //[ms] timestamp of last update of APP Setting to implement timeout stopping
 long SET_SPEED = 0; //[rpm] target speed to Motor
@@ -212,7 +212,7 @@ void LogConfig_byTag(String tag)
 }
 
 
-//Updates Setting from line like "app=69"
+//Updates Setting from line like "app=0.69"
 //if Starts with ; or # it is ignored
 //if permanent is true the config file is updated or memory is commited and change is permanent
 //returns true if setting was updated

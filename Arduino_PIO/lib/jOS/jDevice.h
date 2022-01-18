@@ -40,7 +40,7 @@ public :
 		print(this->name);
 	}
 
-	virtual void print(String title) { }
+	virtual void print(const String& title) { }
 
 };
 

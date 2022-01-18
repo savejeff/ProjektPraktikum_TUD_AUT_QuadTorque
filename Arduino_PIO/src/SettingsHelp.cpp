@@ -56,7 +56,7 @@ bool ProcessContent_String(const String& line_content, String& value)
 
     //Check if starts with ' or "
     if ( 
-        line_content.length() >= 3 &&
+        line_content.length() >= 2 &&
         (
             (line_content[0] == STRING_STARTEND_CHAR0 && line_content[line_content.length() - 1] == STRING_STARTEND_CHAR0)
             ||

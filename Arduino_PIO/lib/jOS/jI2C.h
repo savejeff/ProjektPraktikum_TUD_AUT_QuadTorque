@@ -1,6 +1,8 @@
 #pragma once
 
-#include <jOS.h>
+//#include <jOS.h>
+#include <jCommon.h>
+#include <jSystem.h>
 
 #define I2C_SPEED_FAST 400000L
 #define I2C_SPEED_NORMAL 100000L
@@ -16,23 +18,23 @@ class jI2C
 
 public:
 	jI2C() { }
-	virtual void begin();
-	virtual void end();
+	virtual void begin() = 0;
+	virtual void end() = 0;
 
 	
-	virtual void setFrequency(uint32_t freq);
+	virtual void setFrequency(uint32_t freq) = 0;
 
-	virtual void beginTransmission(uint8_t addr);
-	virtual uint8_t endTransmission(bool stopBit);
-    virtual uint8_t endTransmission(void);
+	virtual void beginTransmission(uint8_t addr) = 0;
+	virtual uint8_t endTransmission(bool stopBit) = 0;
+    virtual uint8_t endTransmission(void) = 0;
 
-    virtual uint8_t requestFrom(uint8_t address, size_t quantity, bool stopBit);
-    virtual uint8_t requestFrom(uint8_t address, size_t quantity);
+    virtual uint8_t requestFrom(uint8_t address, size_t quantity, bool stopBit) = 0;
+    virtual uint8_t requestFrom(uint8_t address, size_t quantity) = 0;
 
-    virtual size_t write(uint8_t data);
-    virtual size_t write(const uint8_t * data, size_t quantity);
+    virtual size_t write(uint8_t data) = 0;
+    virtual size_t write(const uint8_t * data, size_t quantity) = 0;
 
-	virtual byte read(void);
+	virtual byte read(void) = 0;
 
 	virtual bool available() {
 		return true;

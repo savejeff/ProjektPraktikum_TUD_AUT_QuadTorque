@@ -38,6 +38,9 @@ bool isFloatNumber(const String& s);
  * ****************************************/
 
 
+bool is_valid(float v);
+bool is_valid(double x);
+
 #define deg2rad(a_deg) ((a_deg) * FACTOR_deg_2_rad)
 #define rad2deg(a_rad) ((a_rad) * FACTOR_rad_2_deg)
 

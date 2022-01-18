@@ -30,7 +30,6 @@ typedef enum {
 
 #else
 
-
 #include "Arduino.h" // Arduino support
 
 #ifdef PLATFORM_AVR
@@ -57,13 +56,5 @@ typedef	unsigned long	ulong;
 
 
 
-/*
-#ifdef PLATFORM_ESP32
-#include <pgmspace.h>
-#endif 
-#ifdef PLATFORM_STM32   // stm32duino support
-#include <avr/pgmspace.h>
-#endif 
-*/
 
 #endif
