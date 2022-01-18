@@ -36,7 +36,8 @@ DATASET_2021_12_21 = (
 		FEAUTRE_MOTOR_ID : 0,
 		FEAUTRE_PROPELLER_ID : 0,
 		FEAUTRE_PROPELLER_DIAMETER : 6,
-		FEAUTRE_PROPELLER_PITCH : 35
+		FEAUTRE_PROPELLER_PITCH : 35,
+		#TODO add paramter for motor like hight and width
 	},
 	# List of Recording group
 	[
@@ -51,5 +52,40 @@ DATASET_2021_12_21 = (
 		(80, "2021-12-21_080", "COM_ser_2021-12-21_13-46-30", 4096),
 		(90, "2021-12-21_090", "COM_ser_2021-12-21_13-47-34", 4160),
 		(100, "2021-12-21_100", "COM_ser_2021-12-21_13-49-00", 4248),
+	]
+)
+
+DATASET_2022_01_18 = (
+	# Base Feature Vector
+	{
+		FEAUTRE_MOTOR_KV : 1000,
+		FEAUTRE_MOTOR_ID : 0,
+		FEAUTRE_PROPELLER_ID : 0,
+		FEAUTRE_PROPELLER_DIAMETER : 6,
+		FEAUTRE_PROPELLER_PITCH : 35,
+		#TODO add paramter for motor like hight and width
+	},
+	# List of Recording group
+	[
+		#(throttle, datestring, arduino log, timestamp_steadystate)
+		(10, "2022-01-18_010", "COM_ser_2022-01-18_14-52-18", None),
+		(15, "2022-01-18_015", "COM_ser_2022-01-18_14-53-57", None),
+		(20, "2022-01-18_020", "COM_ser_2022-01-18_14-55-14", None),
+		(25, "2022-01-18_025", "COM_ser_2022-01-18_14-56-01", None),
+		(30, "2022-01-18_030", "COM_ser_2022-01-18_14-56-47", None),
+		(35, "2022-01-18_035", "COM_ser_2022-01-18_14-57-43", None),
+		(40, "2022-01-18_040", "COM_ser_2022-01-18_14-58-49", None),
+		(45, "2022-01-18_045", "COM_ser_2022-01-18_15-00-04", None),
+		(50, "2022-01-18_050", "COM_ser_2022-01-18_15-01-17", None),
+		(55, "2022-01-18_055", "COM_ser_2022-01-18_15-02-24", None),
+		(60, "2022-01-18_060", "COM_ser_2022-01-18_15-03-36", None),
+		(65, "2022-01-18_065", "COM_ser_2022-01-18_15-04-42", None),
+		(70, "2022-01-18_070", "COM_ser_2022-01-18_15-06-55", None),
+		(75, "2022-01-18_075", "COM_ser_2022-01-18_15-08-00", None),
+		(80, "2022-01-18_080", "COM_ser_2022-01-18_15-09-02", None),
+		(85, "2022-01-18_085", "COM_ser_2022-01-18_15-10-12", None),
+		(90, "2022-01-18_090", "COM_ser_2022-01-18_15-11-45", None),
+		(95, "2022-01-18_095", "COM_ser_2022-01-18_15-12-48", None),
+		(100, "2022-01-18_100", "COM_ser_2022-01-18_15-14-02", None),
 	]
 )

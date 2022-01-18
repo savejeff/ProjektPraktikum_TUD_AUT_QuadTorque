@@ -597,7 +597,7 @@ def plot_box_xy(data_dict):
 	#plot_setup_grid_lines()
 
 
-def plot_regression_linear(x : list , y : list, color=COLOR_RED):
+def plot_regression_linear(x : list , y : list, color=COLOR_RED, label=None):
 	"""
 	Plot a Linear Regression line matching the given x and y values
 	:param x: list of x values
@@ -611,7 +611,7 @@ def plot_regression_linear(x : list , y : list, color=COLOR_RED):
 	p_min = x_min, m * x_min + b
 	p_max = x_max, m * x_max + b
 
-	plot_xy([p_min, p_max], color=color)
+	plot_xy([p_min, p_max], color=color, label=label)
 
 ###########################
 #      Plot3D Functions   #

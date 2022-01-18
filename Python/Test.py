@@ -2,7 +2,7 @@ from ImportsBase import *
 
 
 if __name__ == '__main__':
-	Execute_ForAllOsci("2021-12-21_T")
+	#Execute_ForAllOsci("2021-12-21_T")
 
 	if False: # Convert Osci Logging from .csv to .mat
 
@@ -101,8 +101,6 @@ if __name__ == '__main__':
 		#logfilename_out = logfilename + "_mod"
 		#store_mat(Data, path_join(logfilefolder, logfilename_out))
 
-
-
 	if False: # Process Results
 
 
@@ -146,7 +144,7 @@ if __name__ == '__main__':
 		plot_show()
 
 
-	if False: # Convert Arduino Loggings
+	if True: # Convert Arduino Loggings
 		offset = -244498 #[1]
 		offset_factor = 1148.709 #[1/g]
 		leverarm = 0.025 #[m]
@@ -158,8 +156,9 @@ if __name__ == '__main__':
 		#datestring, logfilename, name = "2021-11-22", "COM_ser_2021-11-22_12-38-52", "LabMotor_3S_PropB_2"  # Motor Labor, 3S Bat, Big Prop #2
 		#datestring, logfilename, name = "2021-11-22_S", "COM_ser_2021-11-22_12-50-35", "LabMotor_3S_PropS_1"  # Motor Labor, 3S Bat, Small Prop #1
 		#datestring, logfilename, name = "2021-11-22_S", "COM_ser_2021-11-22_12-57-26", "LabMotor_3S_PropS_2" # Motor Labor, 3S Bat, Small Prop #2
-		datestring, logfilename, name = "2021-11-22_2", "COM_ser_2021-11-22_14-19-40", "LabMotor_3S_PropS_1" # Motor #2, 3S Bat, Small Prop #1
+		#datestring, logfilename, name = "2021-11-22_2", "COM_ser_2021-11-22_14-19-40", "LabMotor_3S_PropS_1" # Motor #2, 3S Bat, Small Prop #1
 		#datestring, logfilename, name = "2021-11-22_2", "COM_ser_2021-11-22_14-28-17", "LabMotor_3S_PropS_2" # Motor #2, 3S Bat, Small Prop #2
+		datestring, logfilename, name = "2022-01-18_015", "COM_ser_2022-01-18_14-53-57", "Motor0_4S_2600mAh_Prop6035" # Test für dataset
 
 
 		# Load Data from File
@@ -234,7 +233,29 @@ if __name__ == '__main__':
 
 
 			#Trace_ApplyFunc(Data, GROUP_TEST, TRACE_ACCEL, lambda a: int(-400 < a < 400), TRACE_IS_STEADY_STATE)
-			Trace_ApplyFunc2Trace(Data, GROUP_TEST, TRACE_ACCEL, TRACE_MOTOR_SPEED, lambda a, v: int((-400 < a < 400) and v > 2000), TRACE_IS_STEADY_STATE)
+			Trace_ApplyFunc2Trace(Data, GROUP_TEST, TRACE_ACCEL, TRACE_MOTOR_SPEED, lambda a, v: int((-600 < a < 600) and v > 2000), TRACE_IS_STEADY_STATE)
+
+		if True: # Find Steady State Start and end
+			i_start = Trace_FindFirst(Data, GROUP_TEST, TRACE_IS_STEADY_STATE, func=lambda x : x > 0.5)
+			i_end = Trace_FindFirst(Data, GROUP_TEST, TRACE_IS_STEADY_STATE, func=lambda x : x < 0.5, i_start = i_start + 1)
+
+			plot_setup("Steady State", xlable="Time", ylable="isSteadyState", figsize=FIGSIZE_BIG_W)
+
+			plot_x_y(Data[GROUP_TEST][TRACE_TIME], Data[GROUP_TEST][TRACE_IS_STEADY_STATE])
+
+			points = [
+				(Data[GROUP_TEST][TRACE_TIME][i_start], Data[GROUP_TEST][TRACE_IS_STEADY_STATE][i_start]),
+				(Data[GROUP_TEST][TRACE_TIME][i_end], Data[GROUP_TEST][TRACE_IS_STEADY_STATE][i_end]),
+			]
+			#points = [(x, y) for x, y in points if not (y < 0.2 and x > 0.025)]
+			plot_point(points, markersize=4, marker="*")
+
+
+
+			#plot_tofile(path_join(path_out, "plot_current_over_torque_{}.png".format(name)))
+			plot_show(False)
+
+
 
 		if True: # Create Second Group that only contains values where steady state
 
@@ -244,10 +265,11 @@ if __name__ == '__main__':
 		# Some cleanup by merge signals to groups
 		CreateGroup_FromSignals(Data, GROUP_INA219, [SIGNAL_INA219_CURR, SIGNAL_INA219_PWR, SIGNAL_INA219_VOLT], delete_signal=True)
 		CreateGroup_FromSignals(Data, GROUP_FRQ_IN0, [SIGNAL_GPIO_FRQ_IN0_DUR, SIGNAL_GPIO_FRQ_IN0_FRQ, SIGNAL_GPIO_FRQ_IN0_RPM], delete_signal=True)
-		CreateGroup_FromSignals(Data, GROUP_AI0, [SIGNAL_GPIO_AI0_VOLT, SIGNAL_GPIO_AI0_PERCENT, SIGNAL_GPIO_AI0_RAW], delete_signal=True)
 
+		if Group_Exists(Data, [SIGNAL_GPIO_AI0_VOLT, SIGNAL_GPIO_AI0_PERCENT, SIGNAL_GPIO_AI0_RAW]):
+			CreateGroup_FromSignals(Data, GROUP_AI0, [SIGNAL_GPIO_AI0_VOLT, SIGNAL_GPIO_AI0_PERCENT, SIGNAL_GPIO_AI0_RAW], delete_signal=True)
 
-		if True: # Plot Current over Torque
+		if False: # Plot Current over Torque
 			plot_setup("Current over Torque", xlable="Torque [NM]", ylable="DC Current [A]", figsize=FIGSIZE_BIG)
 
 			x, y = Data[GROUP_TEST2][TRACE_TORQUE], Data[GROUP_TEST2][TRACE_DC_CURRENT]
@@ -263,11 +285,11 @@ if __name__ == '__main__':
 
 			plot_xy([p_min, p_max], color=COLOR_RED)
 
-			plot_tofile(path_join(path_out, "plot_current_over_torque_{}.png".format(name)))
+			#plot_tofile(path_join(path_out, "plot_current_over_torque_{}.png".format(name)))
 			plot_show(False)
 
 
-		if True: # Plot Current over Torque
+		if False: # Plot Current over Torque
 			plot_setup("Current over Speed", xlable="Motor Speed [rpm]", ylable="DC Current [A]", figsize=FIGSIZE_BIG)
 
 			x, y = Data[GROUP_TEST2][TRACE_MOTOR_SPEED], Data[GROUP_TEST2][TRACE_DC_CURRENT]
@@ -288,23 +310,23 @@ if __name__ == '__main__':
 			points = list(zip(x_seq, y_seq))
 			plot_xy(points, color=COLOR_RED)
 
-			plot_tofile(path_join(path_out, "plot_current_over_speed_{}.png".format(name)))
+			#plot_tofile(path_join(path_out, "plot_current_over_speed_{}.png".format(name)))
 			plot_show(False)
 
 
 
-		if True: # Plot Speed over Throttle
+		if False: # Plot Speed over Throttle
 			plot_setup("Current over Speed", xlable="Throttle [%]", ylable="Motor Speed [rpm]", figsize=FIGSIZE_BIG)
 
 			x, y = Data[GROUP_TEST2][TRACE_THROTTLE], Data[GROUP_TEST2][TRACE_MOTOR_SPEED]
 			points = list(zip(x, y))
 			plot_point(points, markersize=2)
 
-			plot_tofile(path_join(path_out, "plot_speed_over_throttle_{}.png".format(name)))
+			#plot_tofile(path_join(path_out, "plot_speed_over_throttle_{}.png".format(name)))
 			plot_show(False)
 
 
-		if True: # EXAMPLE: Store processed data into _mod.mat
+		if False: # EXAMPLE: Store processed data into _mod.mat
 
 			logfilename_out = logfilename + "_mod"
 

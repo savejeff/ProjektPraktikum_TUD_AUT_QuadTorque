@@ -16,12 +16,12 @@ if __name__ == '__main__':
 		#datestring = "2021-11-22_S"
 		#datestring = "2021-12-16"
 		#datestring = "2021-12-21_T"
+		#datestring = "2022-01-18_T"
 
-		datestring = "2021-12-21_T010"
+		#datestrings = [datestring]
 
-		datestrings = [datestring]
-
-		#datestrings = ["2021-12-21_" + n for n in ["010", "020", "030", "040", "050", "060", "070", "080", "090", "100"]
+		#datestrings = ["2021-12-21_" + n for n in ["010", "020", "030", "040", "050", "060", "070", "080", "090", "100"]]
+		datestrings = ["2022-01-18_" + n for n in ["010", "015", "020", "025", "030", "035", "040", "045", "050", "055", "060", "065", "070", "075", "080", "085", "090", "095", "100"]]
 
 		for datestring in datestrings:
 
@@ -33,8 +33,8 @@ if __name__ == '__main__':
 
 		FORMAT_OSCI_SNAPSHOT = "acq{:04d}"
 
-		exp_name = "Complete_2021-12-21"
-		DATASET = DATASET_2021_12_21
+		#exp_name, DATASET = "Complete_2021-12-21", DATASET_2021_12_21
+		exp_name, DATASET = "Complete_2022-01-18", DATASET_2022_01_18
 
 		if False: # Process Dataset - Extract List of Feature Vectors
 

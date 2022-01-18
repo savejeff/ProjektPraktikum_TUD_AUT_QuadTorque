@@ -1612,7 +1612,7 @@ def Group_Split_ByTraceValue(Group, SPLIT_TRACE, Val2Name_func=lambda x : str(x)
 	return {Val2Name_func(v) : Groups[v] for v in Groups}
 
 
-def Trace_FindFirst(Data, GROUP, TRACE, func=lambda x : True):
+def Trace_FindFirst(Data, GROUP, TRACE, func=lambda x : True, t_start=None, i_start=0):
 	"""
 	Finds first Datapoint fullfilling given function.
 	Goes over every datapoint until function returns True
@@ -1620,12 +1620,18 @@ def Trace_FindFirst(Data, GROUP, TRACE, func=lambda x : True):
 	:param GROUP:
 	:param TRACE:
 	:param func:
+	:param t_start: time at which to start search from
+	:param t_start: index at which to start search from
 	:return: index of first datapoint where func returns true
 	"""
 
-	for i in range(Group_Length(Data, GROUP)):
-		if func(Data[GROUP][TRACE][i]):
-			return i
+
+	if t_start != None:
+		i_start = time2index(Data[GROUP], t_start)
+
+	for i, v in enumerate(Data[GROUP][TRACE][i_start:]):
+		if func(v):
+			return i + i_start
 
 	return None
 
