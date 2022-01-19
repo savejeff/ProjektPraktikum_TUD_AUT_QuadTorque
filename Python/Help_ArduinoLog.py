@@ -11,7 +11,7 @@ from FileModule import *
 #import os
 
 
-def ExtractFeatureVector_ArduinoLog(datestring, logfilename, time : float) -> dict:
+def ExtractFeatureVector_ArduinoLog(datestring, logfilename, time : float = None) -> dict:
 	"""
 	Extracts Feature Values of Arduino Log at given time.
 	:param datestring:

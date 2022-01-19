@@ -25,18 +25,39 @@ if __name__ == '__main__':
 
 		for datestring in datestrings:
 
+
 			ConvertOsciLoggingAll(datestring)
 
 			Execute_ForAllOsci(datestring)
 
-	if True: # Do Complete Processing of a Dataset
+
+	if True: # Process Arduino Logging
+
+		datestring, logfilename = "2022-01-18_050", "COM_ser_2022-01-18_15-01-17"
+
+		res = ExtractFeatureVector_ArduinoLog(datestring, logfilename)
+
+		print(res)
+
+	if False: # Do Complete Processing of a Dataset
 
 		FORMAT_OSCI_SNAPSHOT = "acq{:04d}"
 
 		#exp_name, DATASET = "Complete_2021-12-21", DATASET_2021_12_21
 		exp_name, DATASET = "Complete_2022-01-18", DATASET_2022_01_18
 
-		if False: # Process Dataset - Extract List of Feature Vectors
+		if False: # Convert Raw osci loggings
+			for datestring in datestrings:
+
+				base_res, rec_groups = DATASET
+
+				for throttle, datestring, logfilename, timestamp in rec_groups:
+
+					ConvertOsciLoggingAll(datestring)
+
+					Execute_ForAllOsci(datestring)
+
+		if True: # Process Dataset - Extract List of Feature Vectors
 
 			path_exp = Exp_getPath(exp_name)
 
@@ -93,7 +114,7 @@ if __name__ == '__main__':
 			store_json(all_results, FILENAME_EXP_RESULTS, path_exp)
 
 
-		if True: # Plot Dataset Results
+		if False: # Plot Dataset Results
 			AnalyseResults_PlotPhaseCurrent(exp_name, DATASET)
 
 

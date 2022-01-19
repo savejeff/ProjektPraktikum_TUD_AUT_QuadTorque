@@ -1,6 +1,5 @@
 from ImportsBase import *
 
-
 if __name__ == '__main__':
 	#Execute_ForAllOsci("2021-12-21_T")
 
@@ -144,7 +143,7 @@ if __name__ == '__main__':
 		plot_show()
 
 
-	if True: # Convert Arduino Loggings
+	if False: # Convert Arduino Loggings
 		offset = -244498 #[1]
 		offset_factor = 1148.709 #[1/g]
 		leverarm = 0.025 #[m]
@@ -337,4 +336,62 @@ if __name__ == '__main__':
 
 
 		plot_show()
+		#plot_close()
+
+
+	if True: # Plot Messdatenentnahme
+
+		exp_name = "Abbildung_Messdatenentnahme"
+
+		datestring, logfilename = "2022-01-18_050", "COM_ser_2022-01-18_15-01-17"
+
+
+		# Load Data from File
+		#path_out = getLogfilefolder(datestring)
+
+		path_out = Exp_getPath(exp_name)
+
+		Data = LoadData(datestring, logfilename)
+
+		Data = Data_Crop_FromTo(Data, (1400, 1417), Zero_Time=True)
+
+
+		Group_Create_dt(Data, GROUP_TEST, dt=0.1)
+		Trace_Resample(Data, SIGNAL_GPIO_FRQ_IN0_RPM, SIGNAL_GPIO_FRQ_IN0_RPM, GROUP_TEST, TRACE_MOTOR_SPEED)
+
+		Trace_Smooth(Data, GROUP_TEST, TRACE_MOTOR_SPEED, t_range=1.2, TRACE_RES=TRACE_TMP)
+		Trace_Derivative(Data, GROUP_TEST, TRACE_TMP, TRACE_ACCEL)
+
+		#Trace_ApplyFunc(Data, GROUP_TEST, TRACE_ACCEL, lambda a: int(-400 < a < 400), TRACE_IS_STEADY_STATE)
+		Trace_ApplyFunc2Trace(Data, GROUP_TEST, TRACE_ACCEL, TRACE_MOTOR_SPEED, lambda a, v: int((-750 < a < 750) and v > 2000), TRACE_IS_STEADY_STATE)
+
+		i_start = Trace_FindFirst(Data, GROUP_TEST, TRACE_IS_STEADY_STATE, func=lambda x : x > 0.5)
+		i_end = Trace_FindFirst(Data, GROUP_TEST, TRACE_IS_STEADY_STATE, func=lambda x : x < 0.5, i_start = i_start + 1)
+
+		t_start = index2time(Data[GROUP_TEST], i_start)
+		t_end = index2time(Data[GROUP_TEST], i_end)
+
+
+		#plot_setup("Steady State", xlable="Time", ylable="isSteadyState", figsize=FIGSIZE_BIG_W)
+		plot_setup("Messwertentnahme im statischen Zustand", xlable="Zeit in s", ylable="", figsize=FIGSIZE_BIG_W)
+
+		plot_x_y(Data[GROUP_TEST][TRACE_TIME], Data[GROUP_TEST][TRACE_IS_STEADY_STATE], label="Statischer Zustand")
+
+		#plot_point([(t_start, 1), (t_end, 1)], markersize=10, marker="*")
+
+		max_speed = max(Data[GROUP_TEST][TRACE_MOTOR_SPEED])
+		Trace_Scale(Data, GROUP_TEST, TRACE_MOTOR_SPEED, ScaleFactor=1.0 / max_speed, TRACE_RES=TRACE_TMP)
+		plot_Trace(Data, GROUP_TEST, TRACE_TMP, label="Normalisierte Motordrehzahl")
+
+		t0 = Data[GROUP_TEST][TRACE_TIME][0]
+
+		plot_point([(mean([t0, t_start]), 0)], markersize=10, marker="*", color=COLOR_RED, label="Nullung Wägezelle")
+
+		plot_setup_view(xlim=(2.5, 15))
+
+		plot_setup_legend()
+
+		Exp_plot_to_file(exp_name, "plot_steady_state.png")
+
+		plot_show(True)
 		#plot_close()
