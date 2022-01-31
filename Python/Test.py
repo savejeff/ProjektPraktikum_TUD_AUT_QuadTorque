@@ -373,7 +373,7 @@ if __name__ == '__main__':
 
 
 		#plot_setup("Steady State", xlable="Time", ylable="isSteadyState", figsize=FIGSIZE_BIG_W)
-		plot_setup("Messwertentnahme im statischen Zustand", xlable="Zeit in s", ylable="", figsize=FIGSIZE_MED_W)
+		plot_setup("Messwertentnahme im statischen Zustand", xlable="Zeit in s", ylable="", figsize=(9, 5))
 
 		plot_x_y(Data[GROUP_TEST][TRACE_TIME], Data[GROUP_TEST][TRACE_IS_STEADY_STATE], label="Statischer Zustand")
 
