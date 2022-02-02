@@ -3,6 +3,155 @@ from ImportsBase import *
 if __name__ == '__main__':
 	#Execute_ForAllOsci("2021-12-21_T")
 
+	if True: # Convert Osci Logging from .csv to .mat
+
+		datestring = "2022-02-01"
+
+		logfilefolder = getLogfilefolder(datestring)
+
+		# Use this to convert complete folder
+		logfilenames = [
+			#"Rechteck_nach_Spannungsteiler_Schmitttrigger",
+			#"Sinus_nach_Tiefpass",
+			#"Sinus_Unfiltered",
+			#"Sinus_Unfiltered_2",
+			#"Sinus_Unfiltered_3",
+			"Sinus_and_Rechteck_Simul",
+			#"Sinus_and_Rechteck_Simul_2",
+		]
+
+		# Use this to convert specific file
+		#logfilenames = ["bldc_phase_current_phase_to_ground_voltage_throttle_100"]
+
+
+		def load_csv_oszi(filename, path="", mode=0, sample_func=lambda x: x):
+			"""
+			reads csv file from labor oszi like:
+			__________________________
+			X,CH1,CH2,Start,Increment,
+			Sequence,Volt,Volt,-1.200000e-03,2.000000e-06
+			0,4.72e+01,2.40e+00,
+			1,4.64e+01,3.20e+00,
+			2,4.72e+01,3.20e+00,
+			3,4.56e+01,2.40e+00,
+			...
+			____________________________
+
+
+			and returns as
+			list of dict/samples
+			[
+				{ trace1: 0, trace2: 2 },
+				{ trace1: 1, trace2: 2 },
+				{ trace1: 2, trace2: 2 },
+				{ trace1: 3, trace2: 2 },
+				{ trace1: 4, trace2: 2 }
+			]
+			:param filename:
+			:return:
+			"""
+			import csv
+
+			if not filename.endswith(".csv"):
+				filename += '.csv'
+
+			if not isAbsolutPath(filename):
+				filename = path_join(path, filename)
+
+			if (not file_exists(filename)):
+				print("load_csv: File not found - '{}'".format(filename))
+				return {}
+
+			filename = fix_path(filename)
+			data_raw = []
+
+			with open(filename, encoding=ENCODING_UTF_8) as csvfile:
+				csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+				for row in csv_reader:
+					data_raw.append([l.replace("\ufeff", "") for l in row])
+
+			if (len(data_raw) == 0):
+				return {}
+
+			header = data_raw[0][:-3]
+			rows = data_raw[2:]
+
+			t_start = float(data_raw[1][-2])
+			t_delta = float(data_raw[1][-1])
+
+			if not rows:
+				return {}
+
+			del data_raw
+
+
+
+			# mode0: list of dicts/samples (every line is a sample)
+			if mode == 0:
+				res = []
+
+				for row in rows:
+					sample = row
+
+					assert len(sample) == len(header)
+
+					dic = {}
+					for col, tag in enumerate(header):
+						try:
+							dic[header[col]] = sample_func(sample[col])
+						except:
+							print("load_csv_wHeader mode2: Error with {} : {}".format(tag, sample[col]))
+
+					res.append(dic)
+
+				return res
+
+			# mode1: dict of lists/traces (every column is a trace)
+			elif mode == 1:
+
+				last_ghost_sample = True #every line ends with ',' and causes empty sample for every line at end
+
+				res = {tag : [] for tag in header}
+				for row in rows:
+					sample = row
+					if last_ghost_sample:
+						sample = sample[:-1]
+
+					assert len(sample) == len(header)
+
+					for col, tag in enumerate(header):
+						try:
+							res[tag].append(sample_func(sample[col]))
+						except:
+							print("load_csv_wHeader mode1: Error with {} : {}".format(tag, sample[col]))
+
+				T_TIME = header[0]
+				for i in range(len(res[T_TIME])):
+					res[T_TIME][i] = res[T_TIME][i] * t_delta + t_start
+				return res
+
+			return None
+
+
+	for logfilename in logfilenames:
+
+			data = load_csv_oszi(logfilename, logfilefolder, mode = 1, sample_func=lambda x: float(x))
+
+			Data = {GROUP_OSCI: data}
+
+			# Rename Channel Names to defined names
+			Trace_Rename(Data, GROUP_OSCI, "X", TRACE_TIME)
+			Trace_Rename(Data, GROUP_OSCI, "CH1", TRACE_CHANNEL1_V)
+			if Trace_Exists(Data, GROUP_OSCI, "CH2"):
+				Trace_Rename(Data, GROUP_OSCI, "CH2", TRACE_CHANNEL2_V)
+
+			OpenDiadem_Data(Data)
+
+			# Store unmodified data
+			logfilename_out = file_name_swap_extension(logfilename, ".mat")
+			store_mat(Data, path_join(logfilefolder, logfilename_out))
+
+
 	if False: # Convert Osci Logging from .csv to .mat
 
 
@@ -339,7 +488,7 @@ if __name__ == '__main__':
 		#plot_close()
 
 
-	if True: # Plot Messdatenentnahme
+	if False: # Plot Messdatenentnahme
 
 		exp_name = "Abbildung_Messdatenentnahme"
 
