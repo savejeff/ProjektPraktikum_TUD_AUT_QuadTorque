@@ -24,9 +24,9 @@
      inkscape:pagecheckerboard="true"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="2"
-     inkscape:cx="351.25"
-     inkscape:cy="895"
+     inkscape:zoom="4"
+     inkscape:cx="532.625"
+     inkscape:cy="625"
      inkscape:window-width="3840"
      inkscape:window-height="2066"
      inkscape:window-x="2869"
@@ -348,6 +348,34 @@
          d="M 5.77,0 -2.88,5 V -5 Z"
          id="path1110-2-92-3-6" />
     </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleOutL-0-1-3-9"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="TriangleOutL"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.8)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path1110-2-2-0-5" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleOutL-0-1-3-2"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="TriangleOutL"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.8)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path1110-2-2-0-57" />
+    </marker>
   </defs>
   <g
      inkscape:groupmode="layer"
@@ -489,32 +517,42 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-size:2.11667px;line-height:1.25;font-family:sans-serif;display:inline;stroke-width:0.121792"
-       x="27.286081"
-       y="47.398369"
+       style="font-size:2.11667px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;display:inline;stroke-width:0.121792"
+       x="26.124405"
+       y="46.200066"
        id="text22080"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K2_Abb3_PWM.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
          id="tspan22078"
-         style="font-size:2.11667px;stroke-width:0.121792"
-         x="27.286081"
-         y="47.398369">High</tspan></text>
+         style="font-size:2.11667px;text-align:center;text-anchor:middle;stroke-width:0.121792"
+         x="26.124405"
+         y="46.200066">High</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:2.11667px;text-align:center;text-anchor:middle;stroke-width:0.121792"
+         x="26.124405"
+         y="48.845901"
+         id="tspan175017">(T1,T3,T5)</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:2.11667px;line-height:1.25;font-family:sans-serif;display:inline;stroke-width:0.121792"
-       x="27.556349"
-       y="53.2444"
+       style="font-size:2.11667px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;display:inline;stroke-width:0.121792"
+       x="26.394672"
+       y="52.864765"
        id="text23206"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K2_Abb3_PWM.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
          id="tspan23204"
-         style="font-size:2.11667px;stroke-width:0.121792"
-         x="27.556349"
-         y="53.2444">Low</tspan></text>
+         style="font-size:2.11667px;text-align:center;text-anchor:middle;stroke-width:0.121792"
+         x="26.394672"
+         y="52.864765">Low</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:2.11667px;text-align:center;text-anchor:middle;stroke-width:0.121792"
+         x="26.394672"
+         y="55.510601"
+         id="tspan177847">(T2,T4,T6)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:2.11667px;line-height:1.25;font-family:sans-serif;display:inline;stroke-width:0.121792"
@@ -547,7 +585,7 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;display:inline;stroke-width:0.121792"
-       x="21.929953"
+       x="21.003912"
        y="30.556259"
        id="text23696"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K2_Abb3_PWM.png"
@@ -555,17 +593,17 @@
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
          id="tspan23694"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.121792"
-         x="21.929953"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.121792"
+         x="21.003912"
          y="30.556259">Phase </tspan><tspan
          sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.121792"
-         x="21.929953"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.121792"
+         x="21.003912"
          y="33.202095"
          id="tspan26878">to Ground </tspan><tspan
          sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.121792"
-         x="21.929953"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.121792"
+         x="21.003912"
          y="35.847935"
          id="tspan27544">Voltage</tspan></text>
     <image
@@ -1025,7 +1063,7 @@
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
     <path
-       style="display:inline;fill:#ff0000;stroke:#ff0000;stroke-width:0.193909;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutL-0-1-3)"
+       style="display:inline;fill:#aa0000;stroke:#aa0000;stroke-width:0.193909;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutL-0-1-3)"
        d="m 60.016432,160.68583 -1.346171,6.77525"
        id="path36071-5-9-6"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1a_Stromverlauf_a.png"
@@ -1034,7 +1072,7 @@
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
-       style="font-size:2.86384px;line-height:1.25;font-family:sans-serif;display:inline;fill:#ff0000;stroke:none;stroke-width:0.214788"
+       style="font-size:2.86384px;line-height:1.25;font-family:sans-serif;display:inline;fill:#aa0000;stroke:none;stroke-width:0.214788"
        x="56.270458"
        y="159.8307"
        id="text49728-3"
@@ -1043,7 +1081,7 @@
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
          id="tspan49726-5"
-         style="font-size:2.86384px;fill:#ff0000;stroke:none;stroke-width:0.214788"
+         style="font-size:2.86384px;fill:#aa0000;stroke:none;stroke-width:0.214788"
          x="56.270458"
          y="159.8307">Stromspitzen</tspan></text>
     <text
@@ -7919,6 +7957,104 @@ AABJRU5ErkJggg==
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1c_Stromverlauf_c.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.11667px;line-height:1.25;font-family:sans-serif;stroke-width:0.264583"
+       x="15.99439"
+       y="47.443478"
+       id="text131895"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K2_Abb3_PWM.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan131893"
+         style="font-size:2.11667px;stroke-width:0.264583"
+         x="15.99439"
+         y="47.443478" /></text>
+    <path
+       style="display:inline;fill:#aa0000;stroke:#aa0000;stroke-width:0.193909;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutL-0-1-3-9)"
+       d="m 63.203776,235.58314 -1.53326,16.36354"
+       id="path36071-5-9-6-2"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.86384px;line-height:1.25;font-family:sans-serif;display:inline;fill:#aa0000;stroke:none;stroke-width:0.214788"
+       x="59.457802"
+       y="234.72803"
+       id="text49728-3-5"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan49726-5-2"
+         style="font-size:2.86384px;fill:#aa0000;stroke:none;stroke-width:0.214788"
+         x="59.457802"
+         y="234.72803">Stromspitzen</tspan></text>
+    <path
+       style="display:inline;fill:#aa0000;stroke:#aa0000;stroke-width:0.193909;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutL-0-1-3-2)"
+       d="m 158.46224,234.46714 0.0102,10.96135"
+       id="path36071-5-9-6-5"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1c_Stromverlauf_c.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.86384px;line-height:1.25;font-family:sans-serif;display:inline;fill:#aa0000;stroke:none;stroke-width:0.214788"
+       x="153.64052"
+       y="233.98618"
+       id="text49728-3-7"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1c_Stromverlauf_c.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan49726-5-1"
+         style="font-size:2.86384px;fill:#aa0000;stroke:none;stroke-width:0.214788"
+         x="153.64052"
+         y="233.98618">Stromspitzen</tspan></text>
+    <path
+       style="fill:#aa0000;stroke:#aa0000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 158.61771,251.05651 -0.0565,-3.61865"
+       id="path172052"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1c_Stromverlauf_c.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#aa0000;stroke:#aa0000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 167.18359,251.1888 0.0827,26.27643 0.14886,-15.59388 0.13229,-10.64948"
+       id="path172054"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1c_Stromverlauf_c.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#aa0000;stroke:#aa0000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 170.12708,262.3013 0.0827,6.44921 0.21498,-5.98619"
+       id="path172056"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1c_Stromverlauf_c.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#aa0000;stroke:#aa0000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 172.85559,260.96184 3e-5,4.67982"
+       id="path172058"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1c_Stromverlauf_c.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.164014px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 185.90419,164.67266 c 0.57768,-2.78373 -4.01938,-1.13527 -4.56395,-3.01935 -0.68643,1.71583 -5.10669,0.16932 -4.72091,2.85936"
+       id="path181381"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb2_Phasenerkennung.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -7983,7 +8119,7 @@ AABJRU5ErkJggg==
        sodipodi:nodetypes="cc" />
     <path
        style="display:inline;fill:none;stroke:#d40000;stroke-width:0.121984;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 32.558989,45.622326 8.2684,-0.01432 -0.0013,2.555462 h 33.724963 l -0.0122,-2.613862 8.479467,-0.01468"
+       d="m 32.558989,45.704935 8.2684,-0.01432 -0.0013,2.555462 h 33.724963 l -0.0122,-2.613862 8.479467,-0.01468"
        id="path5703"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K2_Abb3_PWM.png"
        inkscape:export-xdpi="300"
@@ -7991,7 +8127,7 @@ AABJRU5ErkJggg==
     <g
        id="g14604"
        style="display:inline;fill:#ff0000;stroke:#d40000"
-       transform="matrix(0.46031745,0,0,0.46031745,8.6134644,10.464847)"
+       transform="matrix(0.46031745,0,0,0.46031745,8.6134644,11.574659)"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K2_Abb3_PWM.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300">
@@ -8311,20 +8447,20 @@ AABJRU5ErkJggg==
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;fill:#d40000;fill-opacity:1;stroke:none;stroke-width:0.121792"
-       x="51.114868"
-       y="58.025452"
+       x="51.181011"
+       y="59.34837"
        id="text17546"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K2_Abb3_PWM.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
          id="tspan17544"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.121792;fill:#d40000;stroke:none"
-         x="51.114868"
-         y="58.025452">PWM</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#d40000;stroke:none;stroke-width:0.121792"
+         x="51.181011"
+         y="59.34837">PWM</tspan></text>
     <path
        style="display:inline;fill:#d40000;stroke:#d40000;stroke-width:0.109953;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutL)"
-       d="m 53.189176,56.386648 -0.25836,-1.6443"
+       d="m 53.255322,57.709565 -0.25836,-1.6443"
        id="path36071"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K2_Abb3_PWM.png"
        inkscape:export-xdpi="300"
@@ -8548,7 +8684,7 @@ AABJRU5ErkJggg==
        inkscape:export-ydpi="300"
        sodipodi:nodetypes="cc" />
     <path
-       style="display:inline;opacity:0.8;fill:none;stroke:#ff0000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="display:inline;opacity:0.8;fill:none;stroke:#ff0000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        d="m 46.813233,183.42469 0.04003,17.33598"
        id="path43229-1"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1a_Stromverlauf_a.png"
@@ -8640,6 +8776,78 @@ AABJRU5ErkJggg==
        d="m 50.467167,257.69125 h 2.806332 v -7.62693 h 5.893948 v 7.70599 h 2.38125 v 8.10286 l 6.316927,0.0165 -0.03307,-8.21862"
        id="path118892"
        sodipodi:nodetypes="ccccccccc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#ff0000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 50.634635,257.67109 -3e-6,7.34219 0.297656,-6.94531"
+       id="path157203"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#ff0000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 54.735676,257.73724 v 5.95312"
+       id="path157205"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#ff0000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 55.00026,258.49791 55.132551,269.197"
+       id="path157207"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#ff0000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 59.150911,257.83646 0.03307,4.92786"
+       id="path157209"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#ff0000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 60.04388,266.05508 -0.01654,-6.69727"
+       id="path157211"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#ff0000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 61.482551,253.76849 -0.06615,3.88606"
+       id="path157213"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#ff0000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 61.63138,273.81067 -0.04961,-9.85573"
+       id="path157215"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#ff0000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 67.832551,257.67109 0.09922,-4.7625"
+       id="path157217"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#d40000;stroke:#d40000;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 50.502343,249.89895 -4e-6,7.70599"
+       id="path157219"
+       sodipodi:nodetypes="cc"
        inkscape:export-filename="C:\Fabian\Uni\Projektseminar AUT\Grafiken\K3_Abb1b_Stromverlauf_b.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
