@@ -31,13 +31,79 @@ if __name__ == '__main__':
 			Execute_ForAllOsci(datestring)
 
 
-	if True: # Process Arduino Logging
+	if False: # Process Arduino Logging
 
 		datestring, logfilename = "2022-01-18_050", "COM_ser_2022-01-18_15-01-17"
 
 		res = ExtractFeatureVector_ArduinoLog(datestring, logfilename)
 
 		print(res)
+
+
+	if False: #Phase to ground für Grafiken
+		exp_name, datestring, logfilename = "Complete_2022-01-18", "2021-11-22", "bldc_phase_current_phase_to_ground_voltage_throttle_30"
+
+		Data = LoadData(datestring, logfilename)
+
+		Trace_Rename(Data, GROUP_OSCI, TRACE_CHANNEL2_V, TRACE_VOLTAGE)
+		plot_setup(figsize=FIGSIZE_SMALL_W)
+		plot_Trace(Data, GROUP_OSCI, TRACE_VOLTAGE, TRACE_TIME, t_start=-0.000477, t_end=0.000973)
+
+		Exp_plot_to_file(exp_name, "voltage_to_ground")
+		plot_show()
+
+
+
+
+	if True: #Phasenströme für Grafiken
+		gas = 50
+		exp_name, datestring, logfilename = "Complete_2022-01-18", "2022-01-18_{:03d}".format(gas), "acq0028"
+
+		Data = LoadData(datestring, logfilename)
+
+		Trace_Rename(Data, GROUP_OSCI, TRACE_CHANNEL2_V, TRACE_VOLTAGE)
+
+		# Conversion from Shunt Voltage to Phase current
+		Trace_Rename(Data, GROUP_OSCI, TRACE_CHANNEL1_V, TRACE_PHASE_CURRENT)
+		Trace_Scale(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, ScaleFactor=100)
+
+
+
+		if True: #einzelene Oszisnapshots plotten
+
+			TRACE_TIME_MS = TRACE_TIME
+			# Trace_Copy(Data, GROUP_OSCI, TRACE_TIME_MS, TRACE_TIME)
+			Trace_Scale(Data, GROUP_OSCI, TRACE_TIME_MS, ScaleFactor=1000)
+
+			plot_setup("c) Phasenstrom bei {}%".format(gas), xlable="Zeit [ms]", ylable="Phasenstrom [A]",
+					   figsize=FIGSIZE_SMALL)
+			plot_Trace(Data, GROUP_OSCI,TRACE_PHASE_CURRENT, TRACE_TIME_MS, t_start=0, t_end=1.5) #, t_start=, t_end=
+
+			Exp_plot_to_file(exp_name, "phasecurrent {}%".format(gas))
+
+		TRACE_PHASE_CURRENT_SMOOTH = TRACE_PHASE_CURRENT + TRACE_POSTFIX_SMOOTH
+
+		# Moving Avg filter to get a clean sinus/zero crossing
+		Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT_SMOOTH, t_range=0.0001)
+		Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT_SMOOTH, TRACE_PHASE_CURRENT_SMOOTH, t_range=0.00012)
+		#Trace_Scale(Data, GROUP_OSCI, TRACE_PHASE_CURRENT_SMOOTH, Offset=1)
+
+		if False: # geglättete Oszisnapshots plotten
+
+			TRACE_TIME_MS = TRACE_TIME
+			# Trace_Copy(Data, GROUP_OSCI, TRACE_TIME_MS, TRACE_TIME)
+			Trace_Scale(Data, GROUP_OSCI, TRACE_TIME_MS, ScaleFactor=1000)
+
+			plot_setup(xlable="Zeit [ms]", ylable="Phasenstrom [A]",
+					   figsize=FIGSIZE_SMALL)
+			plot_Trace(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_TIME_MS, t_start=0.357, t_end=1.775, alpha=0.8)
+			plot_Trace(Data, GROUP_OSCI, TRACE_PHASE_CURRENT_SMOOTH, TRACE_TIME_MS, t_start=0.357, t_end=1.775)  # , t_start=, t_end=
+			plt.axhline(y=0, alpha=0.5, c='k')
+
+			Exp_plot_to_file(exp_name, "geglätteter_Phasenstrom)")
+
+		#penDiadem_Data(Data)
+		plot_show()
 
 	if False: # Do Complete Processing of a Dataset
 
@@ -57,7 +123,7 @@ if __name__ == '__main__':
 
 					Execute_ForAllOsci(datestring)
 
-		if True: # Process Dataset - Extract List of Feature Vectors
+		if False: # Process Dataset - Extract List of Feature Vectors
 
 			path_exp = Exp_getPath(exp_name)
 
@@ -83,13 +149,23 @@ if __name__ == '__main__':
 				res.update(ExtractFeatureVector_ArduinoLog(datestring, logfilename, timestamp))
 
 				# Go over all Osci Recordings and extract AC Current and Period
-				for snapshot_id in range(10, 35):
-					logfilename = FORMAT_OSCI_SNAPSHOT.format(snapshot_id)
+				if throttle >= 60: #hier darauf achten, dass eingeschwungen
+					for snapshot_id in range(20, 40):
+						logfilename = FORMAT_OSCI_SNAPSHOT.format(snapshot_id)
 
-					results = ExtractFeatureVector_OsciSnapshot(datestring, logfilename)
+						results = ExtractFeatureVector_OsciSnapshot(datestring, logfilename)
 
-					res[FEATURE_AC_CURRENT] += [r[FEATURE_AC_CURRENT] for r in results]
-					res[FEATURE_AC_PERIOD]  += [r[FEATURE_AC_PERIOD]  for r in results]
+						res[FEATURE_AC_CURRENT] += [r[FEATURE_AC_CURRENT] for r in results]
+						res[FEATURE_AC_PERIOD] += [r[FEATURE_AC_PERIOD] for r in results]
+
+				else:
+					for snapshot_id in range(10, 30):
+						logfilename = FORMAT_OSCI_SNAPSHOT.format(snapshot_id)
+
+						results = ExtractFeatureVector_OsciSnapshot(datestring, logfilename)
+
+						res[FEATURE_AC_CURRENT] += [r[FEATURE_AC_CURRENT] for r in results]
+						res[FEATURE_AC_PERIOD]  += [r[FEATURE_AC_PERIOD]  for r in results]
 
 
 				all_data.append(res)
@@ -114,7 +190,7 @@ if __name__ == '__main__':
 			store_json(all_results, FILENAME_EXP_RESULTS, path_exp)
 
 
-		if False: # Plot Dataset Results
+		if True: # Plot Dataset Results
 			AnalyseResults_PlotPhaseCurrent(exp_name, DATASET)
 
 

@@ -60,7 +60,7 @@ def plot3d_TraceXYZ(Data, GROUP, TRACE_X, TRACE_Y, TRACE_Z, marker="", t_start=N
 		label, marker, color
 	)
 
-def plot_Trace(Data, GROUP, TRACE, TIME_TRACE=TRACE_TIME, marker="", t_start=None, t_end=None, color=None, label=None):
+def plot_Trace(Data, GROUP, TRACE, TIME_TRACE=TRACE_TIME, marker="", t_start=None, t_end=None, color=None, label=None, alpha=None):
 	"""
 	Plots a Given Trace over Time (or Optional over Given X Axis)
 	"""
@@ -88,7 +88,7 @@ def plot_Trace(Data, GROUP, TRACE, TIME_TRACE=TRACE_TIME, marker="", t_start=Non
 	plot_x_y(
 		Data[GROUP][TIME_TRACE][i_start: i_end],
 		Data[GROUP][TRACE][i_start: i_end],
-		label if label else TRACE, marker, color
+		label if label else TRACE, marker, color, alpha=alpha
 	)
 	"""
 	plt.plot(

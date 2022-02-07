@@ -461,13 +461,13 @@ def plot_xy(XY, label="", marker="", color=None, linestyle=None):
 	X, Y = switchArrayDim(XY) #convert from [(x1, y1), (x2, y2) ...] -> [x1, x2, ...], [y1, y2, ...]
 	plot_x_y(X, Y, label, marker, color, linestyle)
 
-def plot_x_y(X, Y, label="", marker="", color=None, linestyle=None):
+def plot_x_y(X, Y, label="", marker="", color=None, linestyle=None, alpha=None):
 	"""
 	Plots a trace with X and Y as array
 	:param X: [x1, x2, ...]
 	:param Y: [y1, y2, ...]
 	"""
-	plt.plot(X, Y, label=label, marker=marker, color=_get_color(color), linestyle=_get_linestyle(linestyle))
+	plt.plot(X, Y, label=label, marker=marker, color=_get_color(color), linestyle=_get_linestyle(linestyle), alpha=alpha)
 
 
 

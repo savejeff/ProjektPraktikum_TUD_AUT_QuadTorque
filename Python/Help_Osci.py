@@ -35,6 +35,7 @@ def ExtractFeatureVector_OsciSnapshot(datestring, logfilename, enable_offset_cor
 	# Moving Avg filter to get a clean sinus/zero crossing
 	Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT, TRACE_PHASE_CURRENT_SMOOTH, t_range=0.0001)
 	Trace_Smooth(Data, GROUP_OSCI, TRACE_PHASE_CURRENT_SMOOTH, TRACE_PHASE_CURRENT_SMOOTH, t_range=0.00012)
+	Trace_Scale(Data, GROUP_OSCI, TRACE_PHASE_CURRENT_SMOOTH, Offset=1)
 
 	# Find zero Crossings by detect sign change
 	Trace_ApplyFunc(Data, GROUP_OSCI, TRACE_PHASE_CURRENT_SMOOTH, func=lambda x : 1 if x >= 0 else 0, TRACE_RES=TRACE_TEST)
@@ -50,7 +51,7 @@ def ExtractFeatureVector_OsciSnapshot(datestring, logfilename, enable_offset_cor
 		if v > 0.1: # Check if negative flank -> period start
 			list_index_period_half.append(i)
 
-	print(f"list_index_period_start: {list_index_period_start}")
+	#print(f"list_index_period_start: {list_index_period_start}")
 
 	# list_index_period_start like [ 1, 5, 7, 8 ]
 	# list_index_period_half like [ 2, 6, 7.5, 9 ]
@@ -61,7 +62,7 @@ def ExtractFeatureVector_OsciSnapshot(datestring, logfilename, enable_offset_cor
 	GROUP_PERIOD_FORMAT = "Periode_{}"
 	for period_num, (i_start, i_end) in enumerate(zip(list_index_period_start, list_index_period_start[1:])):
 
-		print(f"period#{period_num}: i_start={i_start}, i_end={i_end}")
+		#print(f"period#{period_num}: i_start={i_start}, i_end={i_end}")
 
 		GROUP_NAME = GROUP_PERIOD_FORMAT.format(period_num)
 
@@ -95,7 +96,7 @@ def ExtractFeatureVector_OsciSnapshot(datestring, logfilename, enable_offset_cor
 			if v > 0.1: # Check if negative flank -> period start
 				index_period_half = i
 				break
-		print(f"index_period_half: {index_period_half}")
+		#print(f"index_period_half: {index_period_half}")
 
 		#assert index_period_half != None
 		if index_period_half == None:

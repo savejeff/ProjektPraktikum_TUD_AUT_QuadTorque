@@ -16,7 +16,7 @@ def PlotResults_XY_Box(data, FEATURE_X, FEATURE_Y):
 
 	plot_xy(
 		[(mean_if_list(f[FEATURE_X]), mean_if_list(f[FEATURE_Y])) for f in data],
-		label="Average",
+		label="Mittelwert",
 		linestyle=LINESTYLE_DASHED, color=COLOR_GREEN
 	)
 
@@ -28,7 +28,7 @@ def AnalyseResults_PlotPhaseCurrent(exp_name, DATASET):
 	data = load_json(FILENAME_EXP_DATA_STATS, path_exp)
 
 	if True:
-		plot_setup("AC Currents over Torque", xlable="Torque [NM]", ylable="AC Current [A]", figsize=FIGSIZE_BIG)
+		plot_setup("Phasenstrom über Drehmoment", xlable="Drehmoment [NM]", ylable="Phasenstrom [A]", figsize=FIGSIZE_SMALL)
 
 		FEATURE_X = FEATURE_MOTOR_TORQUE
 		FEATURE_Y = FEATURE_AC_CURRENT
@@ -41,7 +41,7 @@ def AnalyseResults_PlotPhaseCurrent(exp_name, DATASET):
 		plot_regression_linear(x, y, COLOR_RED, label="Regression")
 
 
-		plot_setup_legend()
+		plot_setup_legend('upper left')
 
 		plot_setup_grid()
 
@@ -50,7 +50,7 @@ def AnalyseResults_PlotPhaseCurrent(exp_name, DATASET):
 		plot_show(False)
 
 	if True:
-		plot_setup("DC Currents over Torque", xlable="Torque [NM]", ylable="Current [A]", figsize=FIGSIZE_BIG)
+		plot_setup("DC Strom über Drehmoment", xlable="Drehmoment [NM]", ylable="DC Strom [A]", figsize=FIGSIZE_SMALL)
 
 		FEATURE_X = FEATURE_MOTOR_TORQUE
 		FEATURE_Y = FEATURE_DC_CURRENT
@@ -71,7 +71,7 @@ def AnalyseResults_PlotPhaseCurrent(exp_name, DATASET):
 		plot_show(False)
 
 	if True:
-		plot_setup("Currents AC and DC over Torque", xlable="Torque [NM]", ylable="Current [A]", figsize=FIGSIZE_BIG)
+		plot_setup("Ströme über Drehmoment", xlable="Drehmoment [NM]", ylable="Strom [A]", figsize=FIGSIZE_SMALL)
 
 		FEATURE_X = FEATURE_MOTOR_TORQUE
 		FEATURE_Y = FEATURE_AC_CURRENT
@@ -104,7 +104,7 @@ def AnalyseResults_PlotPhaseCurrent(exp_name, DATASET):
 
 		plot_show(False)
 
-	if True:
+	if False:
 		plot_setup("Motorspeed over Torque", xlable="Torque [NM]", ylable="Motorspeed [rpm]", figsize=FIGSIZE_BIG)
 
 		FEATURE_X = FEATURE_MOTOR_TORQUE
@@ -121,7 +121,7 @@ def AnalyseResults_PlotPhaseCurrent(exp_name, DATASET):
 
 		plot_show(False)
 
-	if True:
+	if False:
 		plot_setup("Motorspeed over Phase Current", xlable="Phase Current [A]", ylable="Motorspeed [rpm]", figsize=FIGSIZE_BIG)
 
 		FEATURE_X = FEATURE_AC_CURRENT
@@ -137,7 +137,7 @@ def AnalyseResults_PlotPhaseCurrent(exp_name, DATASET):
 
 		plot_show(False)
 
-	if True:
+	if False:
 		plot_setup("Phase Current over DC Current", xlable="DC Current [A]", ylable="AC Current [A]", figsize=FIGSIZE_BIG)
 
 		FEATURE_X = FEATURE_DC_CURRENT

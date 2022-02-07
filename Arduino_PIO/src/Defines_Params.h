@@ -14,8 +14,8 @@
 	
 	// Sensors
 	#define ENABLE_SENSOR_INA219 //Voltage Current Sensor 26V
-	//#define ENABLE_SENSOR_INA190 //Shunt Voltage Sensor
-	#define ENABLE_SENSOR_HX711 //Load Cell Amplifier
+	#define ENABLE_SENSOR_INA190 //Shunt Voltage Sensor
+	//#define ENABLE_SENSOR_HX711 //Load Cell Amplifier
 	//#define ENABLE_SENSOR_HX711_2 //Load Cell Amplifier
 
 	// Actors
@@ -55,14 +55,12 @@
 
 
 #ifdef ENABLE_DEBUG
-	//#define WAIT_4_SERIAL
+	#define WAIT_4_SERIAL
 	
 	//#define DEBUG_SERCOM
 	//#define DEBUG_MODE
 	//#define DEBUG_CONFIGURE
 	//#define DEBUG_SETTINGS
-
-	#define DEBUG_ESC
 
 #endif //ENABLE_DEBUG
 

@@ -32,17 +32,10 @@ Sensor_HX711_Class Sensor_HX711_2(PIN_HX711_2_CLOCK, PIN_HX711_2_DATA);
 
 #ifdef ENABLE_ACTOR_ESC
 #include "Sensors/Actor_ESC.h"
-Actor_ESC_Class Actor_ESC("esc", PIN_ESC_PWM, PIN_ESC_PWR, true);
+Actor_ESC_Class Actor_ESC(PIN_PWM_OUT_ESC, PIN_ESC_PWR, false);
 #endif // ENABLE_ACTOR_ESC
 
-
-
-
 #endif // ENABLE_SENSOR
-
-
-/******************************* Module Functions ***********************************************/
-
 
 void SensorModule_Init()
 {
@@ -52,15 +45,14 @@ void SensorModule_Init()
 #ifdef ENABLE_SENSOR_INA219
 
 	Sensor_INA219.begin();
-	
 	//Sensor_INA219.setMultisampleMode(64);
 	Sensor_INA219.setMultisampleMode(128);
 	
-
-	//Sensor_INA219.setCalibration_16V_400mA(); 	//100mOhm 400mA
-	//Sensor_INA219.setCalibration_32V_2A(); 		//100mOhm 2A
-	Sensor_INA219.setCalibration(0.01f, 32.0f); 	//10mOhm 32A
-	//Sensor_INA219.setCalibration(0.001f, 320.0f); //5mOhm 32A
+	//Sensor_INA219.setCalibration(0.001f, 10.0f);
+	//Sensor_INA219.setCalibration_16V_400mA();
+	//Sensor_INA219.setCalibration_32V_2A();
+	Sensor_INA219.setCalibration(0.01f, 20.0f);
+	//Sensor_INA219.setCalibration(0.001f, 320.0f);
 	
 #endif // ENABLE_SENSOR_INA219
 
@@ -77,7 +69,7 @@ void SensorModule_Init()
 	Actor_ESC.begin();
 #endif // ENABLE_ACTOR_ESC
 
-	Log(F("sen.state: init done"));
+	Log(F("sen.state: init"));
 
 #endif // ENABLE_SENSOR
 }
@@ -92,7 +84,7 @@ void SensorModule_Update() {
 
 #ifdef ENABLE_SENSOR_INA219
 	
-	EXECUTE_EVERY(100)
+	EXECUTE_EVERY(125)
 
 		Log("INA219: volt=%.2f, curr=%.3f, pwr=%.1f",
 			Sensor_INA219.getBusVoltage_V(),
@@ -105,14 +97,14 @@ void SensorModule_Update() {
 #endif // ENABLE_SENSOR_INA219
 
 #ifdef ENABLE_SENSOR_HX711
-	EXECUTE_EVERY(50)
+	EXECUTE_EVERY(100)
 		Sensor_HX711.update();
 		Sensor_HX711.print("HX711");
 	EXECUTE_EVERY_END
 #endif // ENABLE_SENSOR_HX711
 
 #ifdef ENABLE_SENSOR_HX711_2
-	EXECUTE_EVERY(50)
+	EXECUTE_EVERY(100)
 		Sensor_HX711_2.update();
 		Sensor_HX711_2.print("HX711#2");
 	EXECUTE_EVERY_END
@@ -120,34 +112,29 @@ void SensorModule_Update() {
 
 #ifdef ENABLE_ACTOR_ESC
 
-	EXECUTE_EVERY(100)
+	EXECUTE_EVERY(250)
 		
-		
+		float app = 0.0f;
 		if(USE_ANALOG_THROTTLE)
 		{
-			float app = getAnalogIn0();
+			app = getAnalogIn0();
 			if(app < 0.075)
 				app = 0.0f;
-			Actor_ESC.setThrottle(app);
 		}
 		else
 		{
-			if(is_valid(APP))
-			{
-				Actor_ESC.setThrottle(APP);
-				APP = NAN;
-			}
+			if(millis() - TIME_UPDATE_APP > 4 * 1000) //check if timeout
+				app = 0.0f;
+			else
+				app = APP;
 		}
 
-		
+		Actor_ESC.setThrottle(app);
 		Actor_ESC.update();
-		Actor_ESC.print();
 
 	EXECUTE_EVERY_END
 
 #endif // ENABLE_ACTOR_ESC
-
-
 
 
 	//Display every Xs
