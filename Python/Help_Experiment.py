@@ -32,6 +32,7 @@ def Exp_plot_to_file(exp_name, plot_file_name):
 	plot_setup_title("", "")
 	plot_tofile(path_join(Exp_getPath(exp_name), plot_file_name + "_notitle.png"))
 	plot_tofile(path_join(Exp_getPath(exp_name), plot_file_name + "_notitle_svg.svg"))
+	plot_tofile(path_join(Exp_getPath(exp_name), plot_file_name + "_notitle.pdf"))
 	plot_setup_title(title)
 
 

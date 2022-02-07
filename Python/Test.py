@@ -3,7 +3,7 @@ from ImportsBase import *
 if __name__ == '__main__':
 	#Execute_ForAllOsci("2021-12-21_T")
 
-	if True: # Convert Osci Logging from .csv to .mat
+	if False: # Convert Osci Logging from .csv to .mat
 
 		datestring = "2022-02-01"
 
@@ -133,23 +133,23 @@ if __name__ == '__main__':
 			return None
 
 
-	for logfilename in logfilenames:
+		for logfilename in logfilenames:
 
-			data = load_csv_oszi(logfilename, logfilefolder, mode = 1, sample_func=lambda x: float(x))
+				data = load_csv_oszi(logfilename, logfilefolder, mode = 1, sample_func=lambda x: float(x))
 
-			Data = {GROUP_OSCI: data}
+				Data = {GROUP_OSCI: data}
 
-			# Rename Channel Names to defined names
-			Trace_Rename(Data, GROUP_OSCI, "X", TRACE_TIME)
-			Trace_Rename(Data, GROUP_OSCI, "CH1", TRACE_CHANNEL1_V)
-			if Trace_Exists(Data, GROUP_OSCI, "CH2"):
-				Trace_Rename(Data, GROUP_OSCI, "CH2", TRACE_CHANNEL2_V)
+				# Rename Channel Names to defined names
+				Trace_Rename(Data, GROUP_OSCI, "X", TRACE_TIME)
+				Trace_Rename(Data, GROUP_OSCI, "CH1", TRACE_CHANNEL1_V)
+				if Trace_Exists(Data, GROUP_OSCI, "CH2"):
+					Trace_Rename(Data, GROUP_OSCI, "CH2", TRACE_CHANNEL2_V)
 
-			OpenDiadem_Data(Data)
+				OpenDiadem_Data(Data)
 
-			# Store unmodified data
-			logfilename_out = file_name_swap_extension(logfilename, ".mat")
-			store_mat(Data, path_join(logfilefolder, logfilename_out))
+				# Store unmodified data
+				logfilename_out = file_name_swap_extension(logfilename, ".mat")
+				store_mat(Data, path_join(logfilefolder, logfilename_out))
 
 
 	if False: # Convert Osci Logging from .csv to .mat
@@ -488,7 +488,7 @@ if __name__ == '__main__':
 		#plot_close()
 
 
-	if False: # Plot Messdatenentnahme
+	if True: # Plot Messdatenentnahme
 
 		exp_name = "Abbildung_Messdatenentnahme"
 
@@ -530,7 +530,7 @@ if __name__ == '__main__':
 
 		max_speed = max(Data[GROUP_TEST][TRACE_MOTOR_SPEED])
 		Trace_Scale(Data, GROUP_TEST, TRACE_MOTOR_SPEED, ScaleFactor=1.0 / max_speed, TRACE_RES=TRACE_TMP)
-		plot_Trace(Data, GROUP_TEST, TRACE_TMP, label="Normalisierte Motordrehzahl")
+		plot_Trace(Data, GROUP_TEST, TRACE_TMP, label="Relative Motordrehzahl")
 
 		t0 = Data[GROUP_TEST][TRACE_TIME][0]
 
@@ -540,7 +540,7 @@ if __name__ == '__main__':
 
 		plot_setup_legend()
 
-		Exp_plot_to_file(exp_name, "plot_steady_state.png")
+		Exp_plot_to_file(exp_name, "plot_steady_state")
 
 		plot_show(True)
 		#plot_close()
